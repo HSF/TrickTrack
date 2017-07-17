@@ -1,6 +1,6 @@
 # tricktrack
 
-![Build Status](https://travis-ci.org/vvolkl/TrickTrack.svg?branch=master)
+[![Build Status](https://travis-ci.org/HEP-SF/TrickTrack.svg?branch=master)](https://travis-ci.org/HEP-SF/TrickTrack)
 
 ## Building the project
 
