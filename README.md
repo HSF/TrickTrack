@@ -6,11 +6,11 @@
 
     mkdir build
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX=<installdir> [-Dtricktrack_BUILD_DOCS=ON] <path to sources>
+    cmake -DCMAKE_INSTALL_PREFIX=<installdir> [-Dtricktrack_documentation=ON] <path to sources>
     make -j<number of cores on your machine>
     make install
 
-The `tricktrack_BUILD_DOCS` variable is optional, and should be passed if you wish to
+The `tricktrack_documentation` variable is optional, and should be passed if you wish to
 build the Doxygen based API documentation. Please note that this requires an existing
 installation of [Doxygen](http://www.doxygen.org/index.html). If CMake cannot locate
 Doxygen, its install location should be added into `CMAKE_PREFIX_PATH`.
