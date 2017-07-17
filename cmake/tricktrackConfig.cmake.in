@@ -10,6 +10,7 @@ set(tricktrack_VERSION "@PROJECT_VERSION@")
 # NOTE: Do not strictly need paths as all usage requirements are encoded in
 # the imported targets created later.
 set_and_check(tricktrack_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set_and_check(tricktrack_LIBRARY_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@/../lib")
 
 # - Include the targets file to create the imported targets that a client can
 # link to (libraries) or execute (programs)
