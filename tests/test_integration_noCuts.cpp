@@ -31,13 +31,11 @@ void findTripletsForTest(const TrackingRegion& region,
   for (const auto& p0 : barrel0) {
     for (const auto& p1 : barrel1) {
       doublets[0]->add(p0.identifier(), p1.identifier());
-      std::cout << "doublet creation: " << p0.identifier() << "\t" << p1.identifier() << std::endl;
     }
   }
   for (const auto& p1 : barrel1) {
     for (const auto& p2 : barrel2) {
       doublets[1]->add(p1.identifier(), p2.identifier());
-      std::cout << "doublet creation: " << p1.identifier() << "\t" << p2.identifier() << std::endl;
     }
   }
 

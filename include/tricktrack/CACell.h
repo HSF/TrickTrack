@@ -182,9 +182,7 @@ public:
     float pMin = ptmin*std::sqrt(distance_13_squared); //this needs to be divided by radius_diff later
     
     float tan_12_13_half_mul_distance_13_squared = fabs(z1 * (getInnerR() - ro) + getInnerZ() * (ro - r1) + zo * (r1 - getInnerR())) ;
-    bool aaa = tan_12_13_half_mul_distance_13_squared * pMin <= thetaCut * distance_13_squared * radius_diff;
-    std::cout << "areAlignedRz: " << aaa << std::endl;
-    return aaa;
+    return tan_12_13_half_mul_distance_13_squared * pMin <= thetaCut * distance_13_squared * radius_diff;
   }
   
   
@@ -198,13 +196,6 @@ public:
 			    const float region_origin_x, const float region_origin_y, const float region_origin_radius, const float phiCut, const float hardPtCut) const
   {
     
-     std::cout << "haveSimilarCurvature: arguments " << 
-     "ptmin: " << ptmin << "\t" <<
-     "region_origin_x: " << region_origin_x  << "\t"
-     << "region_origin_y: " << region_origin_y << "\t"
-     << "region_origin_radius " << region_origin_radius << "\t" << 
-     "phiCut: " << phiCut << "\t"
-     << "hardPtCut" << hardPtCut << "\t" << std::endl;
      
     auto x1 = otherCell.getInnerX();
     auto y1 = otherCell.getInnerY();
@@ -215,12 +206,9 @@ public:
     auto x3 = getOuterX();
     auto y3 = getOuterY();
 
-    std::cout << "x1: " << x1 << ", y1: " << y1 << ", x2: "<< x2 << ", y2: " << y2 << ", x3: " << x3 << ", y3: " << y3 <<  std::endl;
     
     float distance_13_squared = (x1 - x3)*(x1 - x3) + (y1 - y3)*(y1 - y3);
-    std::cout<< "distance_13_squared: " << distance_13_squared <<  std::endl;
     float tan_12_13_half_mul_distance_13_squared = std::abs(y1 * (x2 - x3) + y2 * (x3 - x1) + y3 * (x1 - x2)) ;
-    std::cout<< "tan_12_13_half_mul_distance_13_squared " << tan_12_13_half_mul_distance_13_squared <<  std::endl;
     // high pt : just straight
     if(tan_12_13_half_mul_distance_13_squared * ptmin <= 1.0e-4f*distance_13_squared)
       {
@@ -232,9 +220,7 @@ public:
 	
 	float distance_13_beamspot_squared  = distance_3_beamspot_squared -  proj_bs3_on_13_squared;
 	
-	    bool aaa = distance_13_beamspot_squared < (region_origin_radius+phiCut)*(region_origin_radius+phiCut);
-      std::cout <<  "distance beamspot " << distance_13_beamspot_squared << " should be smaller than" << (region_origin_radius+phiCut)*(region_origin_radius+phiCut) << ", check says "  << aaa << std::endl;
-      return aaa;
+	    return distance_13_beamspot_squared < (region_origin_radius+phiCut)*(region_origin_radius+phiCut);
       }
     
     //87 cm/GeV = 1/(3.8T * 0.3)
@@ -260,7 +246,6 @@ public:
     
     auto radius = std::sqrt((x2 - x_center)*(x2 - x_center) + (y2 - y_center)*(y2 - y_center));
     
-    std::cout << "radius: " << radius << ", minradius: " << minRadius << std::endl;
     if(radius < minRadius)  return false;  // hard cut on pt
     
     auto centers_distance_squared = (x_center - region_origin_x)*(x_center - region_origin_x) + (y_center - region_origin_y)*(y_center - region_origin_y);
@@ -269,9 +254,7 @@ public:
     
     if (centers_distance_squared >= minimumOfIntersectionRange) {
       auto maximumOfIntersectionRange = (radius + region_origin_radius_plus_tolerance)*(radius + region_origin_radius_plus_tolerance);
-      bool aaa = centers_distance_squared <= maximumOfIntersectionRange;
-      std::cout << "centers: " << aaa << std::endl;
-      return aaa;
+      return centers_distance_squared <= maximumOfIntersectionRange;
     } 
     
     return false;
