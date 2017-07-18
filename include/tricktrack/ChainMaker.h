@@ -1,5 +1,6 @@
-#ifndef TRACKSEEDTOOLS_CELLULARAUTOMATON_H
-#define TRACKSEEDTOOLS_CELLULARAUTOMATON_H
+#ifndef TRICKTRACK_CHAINMAKER_H
+#define TRICKTRACK_CHAINMAKER_H
+
 #include <array>
 #include "CACell.h"
 #include "CAGraph.h"
@@ -13,10 +14,10 @@ namespace tricktrack {
 
 namespace tricktrack {
 
-class CellularAutomaton
+class ChainMaker
 {
 public:
-  CellularAutomaton(CAGraph& graph)
+  ChainMaker(CAGraph& graph)
     : theLayerGraph(graph)
   {
     

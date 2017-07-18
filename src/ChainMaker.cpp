@@ -1,4 +1,4 @@
-#include "tricktrack/CellularAutomaton.h"
+#include "tricktrack/ChainMaker.h"
 #include "tricktrack/TrackingRegion.h"
 
 #include <cassert>
@@ -6,7 +6,7 @@
 
 namespace tricktrack {
 
-void CellularAutomaton::createAndConnectCells(std::vector<HitDoublets*>& hitDoublets, const TrackingRegion& region,
+void ChainMaker::createAndConnectCells(std::vector<HitDoublets*>& hitDoublets, const TrackingRegion& region,
                                               const float thetaCut, const float phiCut, const float hardPtCut) {
   // resize cell container
   int tsize = 0;
@@ -85,7 +85,7 @@ void CellularAutomaton::createAndConnectCells(std::vector<HitDoublets*>& hitDoub
   }
 }
 
-void CellularAutomaton::evolve(const unsigned int minHitsPerNtuplet) {
+void ChainMaker::evolve(const unsigned int minHitsPerNtuplet) {
   allStatus.resize(allCells.size());
 
   unsigned int numberOfIterations = minHitsPerNtuplet - 2;
@@ -121,7 +121,7 @@ void CellularAutomaton::evolve(const unsigned int minHitsPerNtuplet) {
   }
 }
 
-void CellularAutomaton::findNtuplets(std::vector<CACell::CAntuplet>& foundNtuplets,
+void ChainMaker::findNtuplets(std::vector<CACell::CAntuplet>& foundNtuplets,
                                      const unsigned int minHitsPerNtuplet) {
   CACell::CAntuple tmpNtuplet;
   tmpNtuplet.reserve(minHitsPerNtuplet);
@@ -133,7 +133,7 @@ void CellularAutomaton::findNtuplets(std::vector<CACell::CAntuplet>& foundNtuple
   }
 }
 
-void CellularAutomaton::findTriplets(std::vector<HitDoublets*>& hitDoublets,
+void ChainMaker::findTriplets(std::vector<HitDoublets*>& hitDoublets,
                                      std::vector<CACell::CAntuplet>& foundTriplets, const TrackingRegion& region,
                                      const float thetaCut, const float phiCut, const float hardPtCut) {
   int tsize = 0;
