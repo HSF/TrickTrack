@@ -2,8 +2,8 @@
 #define TRICKTRACK_CHAINMAKER_H
 
 #include <array>
-#include "CACell.h"
-#include "CAGraph.h"
+#include "CMCell.h"
+#include "CMGraph.h"
 #include "tricktrack/TrackingRegion.h"
 
 // forward declarations
@@ -17,30 +17,30 @@ namespace tricktrack {
 class ChainMaker
 {
 public:
-  ChainMaker(CAGraph& graph)
+  ChainMaker(CMGraph& graph)
     : theLayerGraph(graph)
   {
     
   }
   
-  std::vector<CACell> & getAllCells() { return allCells;}
+  std::vector<CMCell> & getAllCells() { return allCells;}
   
   void createAndConnectCells(std::vector<HitDoublets *>&,
 			     const TrackingRegion& region, const float, const float, const float);
   
   void evolve(const unsigned int);
-  void findNtuplets(std::vector<CACell::CAntuplet>&, const unsigned int);
-  void findTriplets(std::vector<HitDoublets*>& hitDoublets,std::vector<CACell::CAntuplet>& foundTriplets, const TrackingRegion& region, 
+  void findNtuplets(std::vector<CMCell::CMntuplet>&, const unsigned int);
+  void findTriplets(std::vector<HitDoublets*>& hitDoublets,std::vector<CMCell::CMntuplet>& foundTriplets, const TrackingRegion& region, 
 		    const float thetaCut, const float phiCut, const float hardPtCut);
   
 private:
-  CAGraph & theLayerGraph;
+  CMGraph & theLayerGraph;
 
-  std::vector<CACell> allCells;
-  std::vector<CACellStatus> allStatus;
+  std::vector<CMCell> allCells;
+  std::vector<CMCellStatus> allStatus;
 
   std::vector<unsigned int> theRootCells;
-  std::vector<std::vector<CACell*> > theNtuplets;
+  std::vector<std::vector<CMCell*> > theNtuplets;
   
 };
 

@@ -121,9 +121,9 @@ void ChainMaker::evolve(const unsigned int minHitsPerNtuplet) {
   }
 }
 
-void ChainMaker::findNtuplets(std::vector<CACell::CAntuplet>& foundNtuplets,
+void ChainMaker::findNtuplets(std::vector<CMCell::CMntuplet>& foundNtuplets,
                                      const unsigned int minHitsPerNtuplet) {
-  CACell::CAntuple tmpNtuplet;
+  CMCell::CMntuple tmpNtuplet;
   tmpNtuplet.reserve(minHitsPerNtuplet);
 
   for (auto root_cell : theRootCells) {
@@ -134,7 +134,7 @@ void ChainMaker::findNtuplets(std::vector<CACell::CAntuplet>& foundNtuplets,
 }
 
 void ChainMaker::findTriplets(std::vector<HitDoublets*>& hitDoublets,
-                                     std::vector<CACell::CAntuplet>& foundTriplets, const TrackingRegion& region,
+                                     std::vector<CMCell::CMntuplet>& foundTriplets, const TrackingRegion& region,
                                      const float thetaCut, const float phiCut, const float hardPtCut) {
   int tsize = 0;
   for (auto hd : hitDoublets)

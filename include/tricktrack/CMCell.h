@@ -1,5 +1,5 @@
-#ifndef TRACKSEEDTOOLS_CACELL_H
-#define TRACKSEEDTOOLS_CACELL_H
+#ifndef TRICKTRACK_CMCELL_H 
+#define TRICKTRACK_CMCELL_H 
 
 #include <cmath>
 #include <array>
@@ -12,7 +12,7 @@ namespace tricktrack {
 
 
 
-class CACellStatus {
+class CMCellStatus {
 
 public:
   
@@ -35,16 +35,16 @@ public:
   
 };
 
-class CACell {
+class CMCell {
 public:
   using Hit = SpacePoint<size_t>; /// @todo 
-  using CAntuple = std::vector<unsigned int>;
-  using CAntuplet = std::vector<unsigned int>;
-  using CAColl = std::vector<CACell>;
-  using CAStatusColl = std::vector<CACellStatus>;
+  using CMntuple = std::vector<unsigned int>;
+  using CMntuplet = std::vector<unsigned int>;
+  using CMColl = std::vector<CMCell>;
+  using CAStatusColl = std::vector<CMCellStatus>;
   
   
-  CACell(const HitDoublets* doublets, int doubletId, const int innerHitId, const int outerHitId) :
+  CMCell(const HitDoublets* doublets, int doubletId, const int innerHitId, const int outerHitId) :
     theDoublets(doublets), theDoubletId(doubletId)
     ,theInnerR(doublets->rv(doubletId, HitDoublets::inner)) 
     ,theInnerZ(doublets->z(doubletId, HitDoublets::inner))
@@ -119,9 +119,9 @@ public:
   }
   
 
-  void checkAlignmentAndAct(CAColl& allCells, CAntuple & innerCells, const float ptmin, const float region_origin_x,
+  void checkAlignmentAndAct(CMColl& allCells, CMntuple & innerCells, const float ptmin, const float region_origin_x,
 			    const float region_origin_y, const float region_origin_radius, const float thetaCut,
-			    const float phiCut, const float hardPtCut, std::vector<CACell::CAntuplet> * foundTriplets) {
+			    const float phiCut, const float hardPtCut, std::vector<CMCell::CMntuplet> * foundTriplets) {
     int ncells = innerCells.size();
     int constexpr VSIZE = 16;
     int ok[VSIZE];
@@ -145,7 +145,7 @@ public:
 	 if (ok[j]&&haveSimilarCurvature(oc,ptmin, region_origin_x, region_origin_y,
 					region_origin_radius, phiCut, hardPtCut)) {
 	  if (foundTriplets) 
-      foundTriplets->emplace_back(CACell::CAntuplet{koc,cellId});
+      foundTriplets->emplace_back(CMCell::CMntuplet{koc,cellId});
 	  else {
 	    oc.tagAsOuterNeighbor(cellId);
 	  }
@@ -158,14 +158,14 @@ public:
     
   }
   
-  void checkAlignmentAndTag(CAColl& allCells, CAntuple & innerCells, const float ptmin, const float region_origin_x,
+  void checkAlignmentAndTag(CMColl& allCells, CMntuple & innerCells, const float ptmin, const float region_origin_x,
 			    const float region_origin_y, const float region_origin_radius, const float thetaCut,
 			    const float phiCut, const float hardPtCut) {
     checkAlignmentAndAct(allCells, innerCells, ptmin, region_origin_x, region_origin_y, region_origin_radius, thetaCut,
 			 phiCut, hardPtCut, nullptr);
     
   }
-  void checkAlignmentAndPushTriplet(CAColl& allCells, CAntuple & innerCells, std::vector<CACell::CAntuplet>& foundTriplets,
+  void checkAlignmentAndPushTriplet(CMColl& allCells, CMntuple & innerCells, std::vector<CMCell::CMntuplet>& foundTriplets,
 				    const float ptmin, const float region_origin_x, const float region_origin_y,
 				    const float region_origin_radius, const float thetaCut, const float phiCut,
 				    const float hardPtCut) {
@@ -192,7 +192,7 @@ public:
   }
   
   
-  bool haveSimilarCurvature(const CACell & otherCell, const float ptmin,
+  bool haveSimilarCurvature(const CMCell & otherCell, const float ptmin,
 			    const float region_origin_x, const float region_origin_y, const float region_origin_radius, const float phiCut, const float hardPtCut) const
   {
     
@@ -265,7 +265,7 @@ public:
   // trying to free the track building process from hardcoded layers, leaving the visit of the graph
   // based on the neighborhood connections between cells.
   
-  void findNtuplets(CAColl& allCells, std::vector<CAntuplet>& foundNtuplets, CAntuplet& tmpNtuplet, const unsigned int minHitsPerNtuplet) const {
+  void findNtuplets(CMColl& allCells, std::vector<CMntuplet>& foundNtuplets, CMntuplet& tmpNtuplet, const unsigned int minHitsPerNtuplet) const {
     
     // the building process for a track ends if:
     // it has no outer neighbor
@@ -291,7 +291,7 @@ public:
   
 private:
   
-  CAntuple theOuterNeighbors;
+  CMntuple theOuterNeighbors;
   
   const HitDoublets* theDoublets;  
   const int theDoubletId;
@@ -303,4 +303,4 @@ private:
 
 } // namespace tricktrack
 
-#endif /*TRACKSEEDTOOLS_CACELL_H */
+#endif /* TRICKTRACK_CMCELL_H */

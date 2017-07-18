@@ -37,10 +37,10 @@ target_link_libraries(test_hit_class tricktrack catch)
 add_test(NAME testHitClass COMMAND test_hit_class --success)
 
 
-add_executable(test_integration_noCuts test_integration_noCuts.cpp)
-target_link_libraries(test_integration_noCuts tricktrack catch)
-add_test(NAME testIntegrationNoCuts COMMAND test_integration_noCuts --success)
+add_executable(test_integration test_integration.cpp)
+target_link_libraries(test_integration tricktrack catch)
+add_test(NAME testIntegration COMMAND test_integration --success)
 
-add_executable(test_cagraph_class test_cagraph_class.cpp)
-target_link_libraries(test_cagraph_class tricktrack catch)
-add_test(NAME testCAGraph COMMAND test_cagraph_class --success)
+add_executable(test_cmgraph_class test_cmgraph_class.cpp)
+target_link_libraries(test_cmgraph_class tricktrack catch)
+add_test(NAME testCMGraph COMMAND test_cmgraph_class --success)

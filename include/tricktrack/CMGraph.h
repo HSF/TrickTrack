@@ -1,5 +1,5 @@
-#ifndef TRACKSEEDTOOLS_CAGRAPH_H
-#define TRACKSEEDTOOLS_CAGRAPH_H
+#ifndef TRICKTRACK_CMGRAPH_H
+#define TRICKTRACK_CMGRAPH_H
 
 #include <vector>
 #include <array>
@@ -7,9 +7,9 @@
 
 namespace tricktrack {
 
-struct CALayer
+struct CMLayer
 {
-	CALayer(const std::string& layerName, std::size_t numberOfHits )
+	CMLayer(const std::string& layerName, std::size_t numberOfHits )
 	: theName(layerName)
 	{
 		isOuterHitOfCell.resize(numberOfHits);
@@ -38,10 +38,10 @@ private:
 	std::string theName;
 };
 
-struct CALayerPair
+struct CMLayerPair
 {
 
-	CALayerPair(int a, int b)
+	CMLayerPair(int a, int b)
 
 	{
 		theLayers[0] = a;
@@ -50,7 +50,7 @@ struct CALayerPair
 
 
 
-	bool operator==(const CALayerPair& otherLayerPair)
+	bool operator==(const CMLayerPair& otherLayerPair)
 	{
 		return (theLayers[0] == otherLayerPair.theLayers[0])
 				&& (theLayers[1] == otherLayerPair.theLayers[1]);
@@ -60,13 +60,13 @@ struct CALayerPair
 	std::array<unsigned int, 2> theFoundCells= {{0,0}};
 };
 
-struct CAGraph
+struct CMGraph
 {
-	std::vector<CALayer> theLayers;
-	std::vector<CALayerPair> theLayerPairs;
+	std::vector<CMLayer> theLayers;
+	std::vector<CMLayerPair> theLayerPairs;
 	std::vector<int> theRootLayers;
 };
 
 } // namespace tricktrack
 
-#endif /* TRACKSEEDTOOLS_CAGRAPH_H */
+#endif /* TRICKTRACK_CMGRAPH_H */
