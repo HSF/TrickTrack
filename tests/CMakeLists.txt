@@ -44,3 +44,7 @@ add_test(NAME testIntegration COMMAND test_integration --success)
 add_executable(test_cmgraph_class test_cmgraph_class.cpp)
 target_link_libraries(test_cmgraph_class tricktrack catch)
 add_test(NAME testCMGraph COMMAND test_cmgraph_class --success)
+
+add_executable(test_fkdtree test_fkdtree.cpp)
+target_link_libraries(test_fkdtree tricktrack catch)
+add_test(NAME testFKDTree COMMAND test_fkdtree --success)
