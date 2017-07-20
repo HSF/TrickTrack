@@ -6,7 +6,7 @@
 #include <cmath>
 #include <vector>
 // Header for interface we want to test
-#include "tricktrack/ChainMaker.h"
+#include "tricktrack/HitChainMaker.h"
 #include "tricktrack/HitDoublets.h"
 #include "tricktrack/SpacePoint.h"
 
@@ -62,7 +62,7 @@ void findTripletsForTest(const TrackingRegion& region,
   g.theLayerPairs.push_back(lp2);
   g.theRootLayers.push_back(0);
 
-  auto automaton = new ChainMaker(g);
+  auto automaton = new HitChainMaker(g);
   automaton->createAndConnectCells(doublets, region, 1, 1000, 1000);
   automaton->evolve(3);
   automaton->findNtuplets(foundTracklets, 3);

@@ -1,4 +1,4 @@
-#include "tricktrack/ChainMaker.h"
+#include "tricktrack/HitChainMaker.h"
 #include "tricktrack/TrackingRegion.h"
 
 #include <cassert>
@@ -6,7 +6,7 @@
 
 namespace tricktrack {
 
-void ChainMaker::createAndConnectCells(std::vector<HitDoublets*>& hitDoublets, const TrackingRegion& region,
+void HitChainMaker::createAndConnectCells(std::vector<HitDoublets*>& hitDoublets, const TrackingRegion& region,
                                               const float thetaCut, const float phiCut, const float hardPtCut) {
   // resize cell container
   int tsize = 0;
@@ -85,7 +85,7 @@ void ChainMaker::createAndConnectCells(std::vector<HitDoublets*>& hitDoublets, c
   }
 }
 
-void ChainMaker::evolve(const unsigned int minHitsPerNtuplet) {
+void HitChainMaker::evolve(const unsigned int minHitsPerNtuplet) {
   allStatus.resize(allCells.size());
 
   unsigned int numberOfIterations = minHitsPerNtuplet - 2;
@@ -121,7 +121,7 @@ void ChainMaker::evolve(const unsigned int minHitsPerNtuplet) {
   }
 }
 
-void ChainMaker::findNtuplets(std::vector<CMCell::CMntuplet>& foundNtuplets,
+void HitChainMaker::findNtuplets(std::vector<CMCell::CMntuplet>& foundNtuplets,
                                      const unsigned int minHitsPerNtuplet) {
   CMCell::CMntuple tmpNtuplet;
   tmpNtuplet.reserve(minHitsPerNtuplet);
@@ -133,7 +133,7 @@ void ChainMaker::findNtuplets(std::vector<CMCell::CMntuplet>& foundNtuplets,
   }
 }
 
-void ChainMaker::findTriplets(std::vector<HitDoublets*>& hitDoublets,
+void HitChainMaker::findTriplets(std::vector<HitDoublets*>& hitDoublets,
                                      std::vector<CMCell::CMntuplet>& foundTriplets, const TrackingRegion& region,
                                      const float thetaCut, const float phiCut, const float hardPtCut) {
   int tsize = 0;

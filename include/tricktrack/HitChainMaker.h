@@ -1,5 +1,5 @@
-#ifndef TRICKTRACK_CHAINMAKER_H
-#define TRICKTRACK_CHAINMAKER_H
+#ifndef TRICKTRACK_HITCHAINMAKER_H
+#define TRICKTRACK_HITCHAINMAKER_H
 
 #include <array>
 #include "CMCell.h"
@@ -14,10 +14,10 @@ namespace tricktrack {
 
 namespace tricktrack {
 
-class ChainMaker
+class HitChainMaker
 {
 public:
-  ChainMaker(CMGraph& graph)
+  HitChainMaker(CMGraph& graph)
     : theLayerGraph(graph)
   {
     
