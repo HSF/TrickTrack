@@ -49,11 +49,12 @@ TEST_CASE("FKDTree 2D", "[integration]") {
     REQUIRE((unsigned int)tree.size() == numberOfPointsInTheBox + numberOfPointsOutsideTheBox);
 
     REQUIRE((unsigned int)result.size() == numberOfPointsInTheBox);
-  } catch (exception& e) {
+  } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
     REQUIRE(false);
   }
 }
+
 TEST_CASE("FKDTree 3D", "[integration]") {
   try {
     FKDTree<float, 3> tree;
@@ -98,7 +99,7 @@ TEST_CASE("FKDTree 3D", "[integration]") {
     REQUIRE((unsigned int)tree.size() == numberOfPointsInTheBox + numberOfPointsOutsideTheBox);
     REQUIRE((unsigned int)result.size() == numberOfPointsInTheBox);
 
-  } catch (exception& e) {
+  } catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
     REQUIRE(false);
   }
