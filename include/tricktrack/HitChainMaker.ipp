@@ -1,4 +1,3 @@
-#include "tricktrack/HitChainMaker.h"
 #include "tricktrack/TrackingRegion.h"
 
 #include <cassert>
@@ -6,7 +5,8 @@
 
 namespace tricktrack {
 
-void HitChainMaker::createAndConnectCells(std::vector<HitDoublets*>& hitDoublets, const TrackingRegion& region,
+template <typename Hit>
+void HitChainMaker<Hit>::createAndConnectCells(std::vector<HitDoublets<Hit>*>& hitDoublets, const TrackingRegion& region,
                                               const float thetaCut, const float phiCut, const float hardPtCut) {
   // resize cell container
   int tsize = 0;
@@ -53,7 +53,7 @@ void HitChainMaker::createAndConnectCells(std::vector<HitDoublets*>& hitDoublets
 
       if (alreadyVisitedLayerPairs[currentLayerPair] == false && allInnerLayerPairsAlreadyVisited) {
 
-        const HitDoublets* doubletLayerPairId = hitDoublets[currentLayerPair];
+        const HitDoublets<Hit>* doubletLayerPairId = hitDoublets[currentLayerPair];
         auto numberOfDoublets = doubletLayerPairId->size();
         currentLayerPairRef.theFoundCells[0] = cellId;
         currentLayerPairRef.theFoundCells[1] = cellId + numberOfDoublets;
@@ -85,7 +85,8 @@ void HitChainMaker::createAndConnectCells(std::vector<HitDoublets*>& hitDoublets
   }
 }
 
-void HitChainMaker::evolve(const unsigned int minHitsPerNtuplet) {
+template <typename Hit>
+void HitChainMaker<Hit>::evolve(const unsigned int minHitsPerNtuplet) {
   allStatus.resize(allCells.size());
 
   unsigned int numberOfIterations = minHitsPerNtuplet - 2;
@@ -121,9 +122,10 @@ void HitChainMaker::evolve(const unsigned int minHitsPerNtuplet) {
   }
 }
 
-void HitChainMaker::findNtuplets(std::vector<CMCell::CMntuplet>& foundNtuplets,
+template <typename Hit>
+void HitChainMaker<Hit>::findNtuplets(std::vector<typename CMCell<Hit>::CMntuplet>& foundNtuplets,
                                      const unsigned int minHitsPerNtuplet) {
-  CMCell::CMntuple tmpNtuplet;
+  typename CMCell<Hit>::CMntuple tmpNtuplet;
   tmpNtuplet.reserve(minHitsPerNtuplet);
 
   for (auto root_cell : theRootCells) {
@@ -133,8 +135,9 @@ void HitChainMaker::findNtuplets(std::vector<CMCell::CMntuplet>& foundNtuplets,
   }
 }
 
-void HitChainMaker::findTriplets(std::vector<HitDoublets*>& hitDoublets,
-                                     std::vector<CMCell::CMntuplet>& foundTriplets, const TrackingRegion& region,
+template <typename Hit>
+void HitChainMaker<Hit>::findTriplets(std::vector<HitDoublets<Hit>*>& hitDoublets,
+                                     std::vector<typename CMCell<Hit>::CMntuplet>& foundTriplets, const TrackingRegion& region,
                                      const float thetaCut, const float phiCut, const float hardPtCut) {
   int tsize = 0;
   for (auto hd : hitDoublets)
@@ -174,7 +177,7 @@ void HitChainMaker::findTriplets(std::vector<HitDoublets*>& hitDoublets,
       }
 
       if (alreadyVisitedLayerPairs[currentLayerPair] == false && allInnerLayerPairsAlreadyVisited) {
-        const HitDoublets* doubletLayerPairId = hitDoublets[currentLayerPair];
+        const HitDoublets<Hit>* doubletLayerPairId = hitDoublets[currentLayerPair];
         auto numberOfDoublets = doubletLayerPairId->size();
         currentLayerPairRef.theFoundCells[0] = cellId;
         currentLayerPairRef.theFoundCells[1] = cellId + numberOfDoublets;

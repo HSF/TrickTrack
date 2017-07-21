@@ -20,11 +20,11 @@ void findTripletsForTest(const TrackingRegion& region,
                              barrel1,
                          std::vector<Hit>
                              barrel2,
-                         std::vector<CMCell::CMntuplet>& foundTracklets) {
+                         std::vector<CMCell<Hit>::CMntuplet>& foundTracklets) {
 
-  std::vector<HitDoublets*> doublets;
-  auto doublet1 = new HitDoublets(barrel0, barrel1);
-  auto doublet2 = new HitDoublets(barrel1, barrel2);
+  std::vector<HitDoublets<Hit>*> doublets;
+  auto doublet1 = new HitDoublets<Hit>(barrel0, barrel1);
+  auto doublet2 = new HitDoublets<Hit>(barrel1, barrel2);
   doublets.push_back(doublet1);
   doublets.push_back(doublet2);
 
@@ -62,7 +62,7 @@ void findTripletsForTest(const TrackingRegion& region,
   g.theLayerPairs.push_back(lp2);
   g.theRootLayers.push_back(0);
 
-  auto automaton = new HitChainMaker(g);
+  auto automaton = new HitChainMaker<Hit>(g);
   automaton->createAndConnectCells(doublets, region, 1, 1000, 1000);
   automaton->evolve(3);
   automaton->findNtuplets(foundTracklets, 3);
@@ -80,7 +80,7 @@ TEST_CASE("Integration test without track filtering", "[integration]") {
     std::vector<Hit> outer_hits;
     outer_hits.push_back(Hit(0, 3, 0, 0));
 
-    std::vector<CMCell::CMntuplet> foundTracklets;
+    std::vector<CMCell<Hit>::CMntuplet> foundTracklets;
     findTripletsForTest(myRegion, inner_hits, middle_hits, outer_hits, foundTracklets);
     REQUIRE(foundTracklets.size() == 1);
   }
@@ -96,7 +96,7 @@ TEST_CASE("Integration test without track filtering", "[integration]") {
     outer_hits.push_back(Hit(0, 3, 0, 0));
     outer_hits.push_back(Hit(3, 0, 0, 1));
 
-    std::vector<CMCell::CMntuplet> foundTracklets;
+    std::vector<CMCell<Hit>::CMntuplet> foundTracklets;
     findTripletsForTest(myRegion, inner_hits, middle_hits, outer_hits, foundTracklets);
     REQUIRE(foundTracklets.size() == 2);
   }
@@ -112,7 +112,7 @@ TEST_CASE("Integration test without track filtering", "[integration]") {
     outer_hits.push_back(Hit(0, 3, 0, 0));
     outer_hits.push_back(Hit(0, 3.003, 0, 1));
 
-    std::vector<CMCell::CMntuplet> foundTracklets;
+    std::vector<CMCell<Hit>::CMntuplet> foundTracklets;
     findTripletsForTest(myRegion, inner_hits, middle_hits, outer_hits, foundTracklets);
     REQUIRE(foundTracklets.size() == 8);
   }

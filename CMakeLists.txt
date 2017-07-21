@@ -65,7 +65,6 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
               ${CMAKE_CURRENT_SOURCE_DIR}/NOTICE
               DESTINATION ${CMAKE_INSTALL_DOCDIR})
 
-add_subdirectory(src)
 add_subdirectory(tests)
 
 #--- create uninstall target ---------------------------------------------------

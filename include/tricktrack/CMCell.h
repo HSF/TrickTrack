@@ -35,46 +35,46 @@ public:
   
 };
 
+template <typename Hit>
 class CMCell {
 public:
-  using Hit = SpacePoint<size_t>; /// @todo 
   using CMntuple = std::vector<unsigned int>;
   using CMntuplet = std::vector<unsigned int>;
-  using CMColl = std::vector<CMCell>;
+  using CMColl = std::vector<CMCell<Hit>>;
   using CAStatusColl = std::vector<CMCellStatus>;
   
   
-  CMCell(const HitDoublets* doublets, int doubletId, const int innerHitId, const int outerHitId) :
+  CMCell(const HitDoublets<Hit>* doublets, int doubletId, const int innerHitId, const int outerHitId) :
     theDoublets(doublets), theDoubletId(doubletId)
-    ,theInnerR(doublets->rv(doubletId, HitDoublets::inner)) 
-    ,theInnerZ(doublets->z(doubletId, HitDoublets::inner))
+    ,theInnerR(doublets->rv(doubletId, HitDoublets<Hit>::inner)) 
+    ,theInnerZ(doublets->z(doubletId, HitDoublets<Hit>::inner))
   {}
 
    
   
   Hit const & getInnerHit() const {
-    return theDoublets->hit(theDoubletId, HitDoublets::inner);
+    return theDoublets->hit(theDoubletId, HitDoublets<Hit>::inner);
   }
   
   Hit const & getOuterHit() const {
-    return theDoublets->hit(theDoubletId, HitDoublets::outer);
+    return theDoublets->hit(theDoubletId, HitDoublets<Hit>::outer);
   }
   
   
   float getInnerX() const {
-    return theDoublets->x(theDoubletId, HitDoublets::inner);
+    return theDoublets->x(theDoubletId, HitDoublets<Hit>::inner);
   }
   
   float getOuterX() const {
-    return theDoublets->x(theDoubletId, HitDoublets::outer);
+    return theDoublets->x(theDoubletId, HitDoublets<Hit>::outer);
   }
   
   float getInnerY() const {
-    return theDoublets->y(theDoubletId, HitDoublets::inner);
+    return theDoublets->y(theDoubletId, HitDoublets<Hit>::inner);
   }
   
   float getOuterY() const {
-    return theDoublets->y(theDoubletId, HitDoublets::outer);
+    return theDoublets->y(theDoubletId, HitDoublets<Hit>::outer);
   }
   
   float getInnerZ() const {
@@ -82,7 +82,7 @@ public:
   }
   
   float getOuterZ() const {
-    return theDoublets->z(theDoubletId, HitDoublets::outer);
+    return theDoublets->z(theDoubletId, HitDoublets<Hit>::outer);
   }
   
   float getInnerR() const {
@@ -90,15 +90,15 @@ public:
   }
   
   float getOuterR() const {
-    return theDoublets->rv(theDoubletId, HitDoublets::outer);
+    return theDoublets->rv(theDoubletId, HitDoublets<Hit>::outer);
   }
   
   float getInnerPhi() const {
-    return theDoublets->phi(theDoubletId, HitDoublets::inner);
+    return theDoublets->phi(theDoubletId, HitDoublets<Hit>::inner);
   }
   
   float getOuterPhi() const {
-    return theDoublets->phi(theDoubletId, HitDoublets::outer);
+    return theDoublets->phi(theDoubletId, HitDoublets<Hit>::outer);
   }
   
   void evolve(unsigned int me, CAStatusColl& allStatus) {
@@ -293,7 +293,7 @@ private:
   
   CMntuple theOuterNeighbors;
   
-  const HitDoublets* theDoublets;  
+  const HitDoublets<Hit>* theDoublets;  
   const int theDoubletId;
   
   const float theInnerR;

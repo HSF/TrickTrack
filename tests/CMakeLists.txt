@@ -24,7 +24,7 @@ target_include_directories(catch INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/catch)
 add_executable(test_hit_class test_hit_class.cpp)
 
 # 2. Link it to the library being tested, plus the unit test library(ies)
-target_link_libraries(test_hit_class tricktrack catch)
+target_link_libraries(test_hit_class  catch)
 
 # 3. Add the test program as a command to be run as a test
 # Note: NAME is what will be shown in CTest, COMMAND is what will be run
@@ -38,13 +38,13 @@ add_test(NAME testHitClass COMMAND test_hit_class --success)
 
 
 add_executable(test_integration test_integration.cpp)
-target_link_libraries(test_integration tricktrack catch)
+target_link_libraries(test_integration  catch)
 add_test(NAME testIntegration COMMAND test_integration --success)
 
 add_executable(test_cmgraph_class test_cmgraph_class.cpp)
-target_link_libraries(test_cmgraph_class tricktrack catch)
+target_link_libraries(test_cmgraph_class  catch)
 add_test(NAME testCMGraph COMMAND test_cmgraph_class --success)
 
 add_executable(test_fkdtree test_fkdtree.cpp)
-target_link_libraries(test_fkdtree tricktrack catch)
+target_link_libraries(test_fkdtree  catch)
 add_test(NAME testFKDTree COMMAND test_fkdtree --success)

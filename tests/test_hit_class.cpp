@@ -33,7 +33,7 @@ TEST_CASE("Hit Point Behavior", "[interface]") {
   outer_hits.push_back(Hit(-30, -20, -10, 200));
   outer_hits.push_back(Hit(10, 10, 10, 201));
 
-  HitDoublets doublets(inner_hits, outer_hits);
+  HitDoublets<Hit> doublets(inner_hits, outer_hits);
   doublets.add(0, 0);
   doublets.add(1, 1);
 
