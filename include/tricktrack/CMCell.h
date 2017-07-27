@@ -34,7 +34,7 @@ public:
     return (theCAState >= minimumCAState);
   }
   
- private:
+ public:
   unsigned char theCAState=0;
   unsigned char hasSameStateNeighbors=0;
   
