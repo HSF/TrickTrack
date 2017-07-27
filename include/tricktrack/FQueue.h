@@ -5,6 +5,10 @@
 
 namespace tricktrack {
 
+/** @class FQueue
+ *
+ * Queue implementation for the KDTree 
+ */
 template <class T>
 class FQueue {
 public:

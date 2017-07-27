@@ -4,6 +4,10 @@
 
 namespace tricktrack {
 
+/** @class TrackingRegion
+ *
+ * gathers detector geometry information on luminous region for geometric constraints during track seeding.
+ */
 class TrackingRegion {
 
 public:

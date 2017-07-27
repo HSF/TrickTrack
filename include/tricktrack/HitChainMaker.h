@@ -15,6 +15,11 @@ namespace tricktrack {
 
 namespace tricktrack {
 
+
+/** @class HitChainMaker
+ * 
+ * Top level object of the seeding algorithm: connects and evolves the links of the chain
+ */
 template <typename Hit>
 class HitChainMaker
 {

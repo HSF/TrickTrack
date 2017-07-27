@@ -6,7 +6,10 @@
 
 namespace tricktrack {
 
-// a K-dimensional point to interface with the FKDTree class
+/** @class FKDPoint
+ *
+ * a K-dimensional point to interface with the FKDTree class
+ */
 template <class TYPE, int numberOfDimensions>
 class FKDPoint {
 

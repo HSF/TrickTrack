@@ -9,12 +9,6 @@
 #include <utility>
 #include <vector>
 
-// Author: Felice Pantaleo
-// email: felice.pantaleo@cern.ch
-// date: 08/05/2017
-// Description: This class provides a k-d tree implementation targeting modern architectures.
-// Building each level of the FKDTree can be done in parallel by different threads.
-// It produces a compact array of nodes in memory thanks to the different space partitioning method used.
 
 namespace tricktrack {
 
@@ -33,6 +27,16 @@ unsigned int ilog2(unsigned int v) {
 }
 }
 
+/** @class FKDTree
+ *  @author Felice Pantaleo
+ *  @email felice.pantaleo@cern.ch
+ *  @date: 08/05/2017
+ *
+ *  This class provides a k-d tree implementation targeting modern architectures.
+ * Building each level of the FKDTree can be done in parallel by different threads.
+ * It produces a compact array of nodes in memory thanks to the different space partitioning method used.
+ */
+
 template <class TYPE, unsigned int numberOfDimensions>
 class FKDTree {
 
@@ -44,12 +48,12 @@ public:
 
   bool empty() { return theNumberOfPoints == 0; }
 
-  // One can search for all the points which are contained in a k-dimensional box.
-  // Searching is done by providing the two k-dimensional points in the minimum and maximum corners.
-  // The vector that will contain the indices of the points that lay inside the box is also needed.
-  // Indices are pushed into foundPoints, which is not checked for emptiness at the beginning,
-  // nor memory is reserved for it.
-  // Searching is done using a Breadth-first search, level after level.
+  /// One can search for all the points which are contained in a k-dimensional box.
+  /// Searching is done by providing the two k-dimensional points in the minimum and maximum corners.
+  /// The vector that will contain the indices of the points that lay inside the box is also needed.
+  /// Indices are pushed into foundPoints, which is not checked for emptiness at the beginning,
+  /// nor memory is reserved for it.
+  /// Searching is done using a Breadth-first search, level after level.
   void search(const FKDPoint<TYPE, numberOfDimensions>& minPoint,
               const FKDPoint<TYPE, numberOfDimensions>& maxPoint,
               std::vector<unsigned int>& foundPoints) {
@@ -108,8 +112,8 @@ public:
     }
   }
 
-  // A vector of K-dimensional points needs to be passed in order to build the kdtree.
-  // The order of the elements in the vector will be modified.
+  /// A vector of K-dimensional points needs to be passed in order to build the kdtree.
+  /// The order of the elements in the vector will be modified.
   void build(std::vector<FKDPoint<TYPE, numberOfDimensions>>& points) {
     // initialization of the data members
     theNumberOfPoints = points.size();
@@ -174,20 +178,20 @@ public:
       add_at_position(points[theIntervalMin[indexInArray]], indexInArray);
     }
   }
-  // returns the number of points in the FKDTree
+  /// returns the number of points in the FKDTree
   std::size_t size() const { return theNumberOfPoints; }
 
 private:
-  // returns the index of the element which makes the FKDtree a left-complete heap
-  // e.g.: if we have 6 elements, the tree will be shaped like
-  //                 O
-  //                / '\'
-  //               O    O
-  //              /'\' /
-  //             O   OO
-  //
-  // This will return for a length of 6 the 4th element, which will partition the tree so that
-  // 3 elements are on its left and 2 elements are on its right
+  /// returns the index of the element which makes the FKDtree a left-complete heap
+  /// e.g.: if we have 6 elements, the tree will be shaped like
+  ///                 O
+  ///                / '\'
+  ///               O    O
+  ///              /'\' /
+  ///             O   OO
+  ///
+  /// This will return for a length of 6 the 4th element, which will partition the tree so that
+  /// 3 elements are on its left and 2 elements are on its right
   unsigned int partition_complete_kdtree(unsigned int length) {
     if (length == 1) return 0;
     unsigned int index = 1 << (ilog2(length));
@@ -198,19 +202,19 @@ private:
       return length - index / 2;
   }
 
-  // returns the index of an element left son in the array representation
+  /// returns the index of an element left son in the array representation
   unsigned int leftSonIndex(unsigned int index) const { return 2 * index + 1; }
-  // returns the index of an element right son in the array representation
+  /// returns the index of an element right son in the array representation
   unsigned int rightSonIndex(unsigned int index) const { return 2 * index + 2; }
 
-  // check if one element's dimension is between minPoint's and maxPoint's dimension
+  /// check if one element's dimension is between minPoint's and maxPoint's dimension
   bool intersects(unsigned int index, const FKDPoint<TYPE, numberOfDimensions>& minPoint,
                   const FKDPoint<TYPE, numberOfDimensions>& maxPoint, int dimension) const {
     return (theDimensions[dimension][index] <= maxPoint[dimension] &&
             theDimensions[dimension][index] >= minPoint[dimension]);
   }
 
-  // check if an element is completely in the box
+  /// check if an element is completely in the box
   bool is_in_the_box(unsigned int index, const FKDPoint<TYPE, numberOfDimensions>& minPoint,
                      const FKDPoint<TYPE, numberOfDimensions>& maxPoint) const {
     for (unsigned int i = 0; i < numberOfDimensions; ++i) {
@@ -219,7 +223,7 @@ private:
     return true;
   }
 
-  // places an element at the specified position in the internal data structure
+  /// places an element at the specified position in the internal data structure
   void add_at_position(const FKDPoint<TYPE, numberOfDimensions>& point, const unsigned int position) {
     for (unsigned int i = 0; i < numberOfDimensions; ++i)
       theDimensions[i][position] = point[i];
@@ -235,7 +239,7 @@ private:
   unsigned int theNumberOfPoints;
   unsigned int theDepth;
 
-  // a SoA containing all the dimensions for each point
+  /// a SoA containing all the dimensions for each point
   std::array<std::vector<TYPE>, numberOfDimensions> theDimensions;
   std::vector<unsigned int> theIntervalLength;
   std::vector<unsigned int> theIntervalMin;

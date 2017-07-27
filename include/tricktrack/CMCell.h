@@ -11,11 +11,16 @@
 namespace tricktrack {
 
 
-
+/** @class CMCellStatus 
+ *
+ * Internal property of a Cell acted on during evolution.
+ *
+ */
 class CMCellStatus {
 
 public:
   
+  /// getter for the State
   unsigned char getCAState() const {
     return theCAState;
   }
@@ -29,12 +34,19 @@ public:
     return (theCAState >= minimumCAState);
   }
   
- public:
+ private:
   unsigned char theCAState=0;
   unsigned char hasSameStateNeighbors=0;
   
 };
 
+
+/** @class CMCell
+ *
+ * Links of the chain. The cell is the smallest unit of the algorithm and 
+ * carries indices referring to the doublet and input hits. Tracklets are built
+ * by updating its state.
+ * */
 template <typename Hit>
 class CMCell {
 public:
@@ -101,6 +113,8 @@ public:
     return theDoublets->phi(theDoubletId, HitDoublets<Hit>::outer);
   }
   
+  /// local action undertaken during CM evolution:
+  /// the state is increased if the cell has neighbors with the same state
   void evolve(unsigned int me, CAStatusColl& allStatus) {
     
     allStatus[me].hasSameStateNeighbors = 0;
@@ -118,7 +132,6 @@ public:
     
   }
   
-
   void checkAlignmentAndAct(CMColl& allCells, CMntuple & innerCells, const float ptmin, const float region_origin_x,
 			    const float region_origin_y, const float region_origin_radius, const float thetaCut,
 			    const float phiCut, const float hardPtCut, std::vector<CMCell::CMntuplet> * foundTriplets) {
@@ -165,6 +178,7 @@ public:
 			 phiCut, hardPtCut, nullptr);
     
   }
+  
   void checkAlignmentAndPushTriplet(CMColl& allCells, CMntuple & innerCells, std::vector<CMCell::CMntuplet>& foundTriplets,
 				    const float ptmin, const float region_origin_x, const float region_origin_y,
 				    const float region_origin_radius, const float thetaCut, const float phiCut,
@@ -173,7 +187,7 @@ public:
 			 phiCut, hardPtCut, &foundTriplets);
   }
   
-  
+  /// check cells for compatibility in the r-z plane 
   int areAlignedRZ(float r1, float z1, float ro, float zo, const float ptmin, const float thetaCut) const
   {
     float radius_diff = std::abs(r1 - ro);
@@ -192,6 +206,7 @@ public:
   }
   
   
+  /// check two cells for compatibility using the curvature in x-y plane
   bool haveSimilarCurvature(const CMCell & otherCell, const float ptmin,
 			    const float region_origin_x, const float region_origin_y, const float region_origin_radius, const float phiCut, const float hardPtCut) const
   {
@@ -293,10 +308,14 @@ private:
   
   CMntuple theOuterNeighbors;
   
+  /// the doublet container for this layer
   const HitDoublets<Hit>* theDoublets;  
+  /// the index of the cell doublet in the doublet container
   const int theDoubletId;
   
+  /// cache of the z-coordinate of the doublet on the inner layer
   const float theInnerR;
+  /// cache of the r-coordinate of the doublet on the inner layer
   const float theInnerZ;
   
 };
