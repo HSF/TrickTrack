@@ -66,6 +66,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
               DESTINATION ${CMAKE_INSTALL_DOCDIR})
 
 add_subdirectory(tests)
+add_subdirectory(src)
 
 #--- create uninstall target ---------------------------------------------------
 include(cmake/tricktrackUninstall.cmake)
