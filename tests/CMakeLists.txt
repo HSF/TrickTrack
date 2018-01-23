@@ -4,6 +4,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 
 
 
+
 # - Create interface target for local catch copy
 # Single header is placed in dedicated directory for clean separation
 # Using an interface target means we simply link to it like any other target
@@ -15,6 +16,8 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # and copy the `catch.hpp` file into the catch subdirectory
 add_library(catch INTERFACE)
 target_include_directories(catch INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/catch)
+
+#find_package(Eigen3)
 
 
 # - Create and define test executables
@@ -48,3 +51,8 @@ add_test(NAME testCMGraph COMMAND test_cmgraph_class --success)
 add_executable(test_fkdtree test_fkdtree.cpp)
 target_link_libraries(test_fkdtree  catch)
 add_test(NAME testFKDTree COMMAND test_fkdtree --success)
+
+add_executable(test_riemannfit test_riemannfit.cpp)
+include_directories( $ENV{EIGEN_INCLUDE_DIR})
+target_link_libraries(test_riemannfit  catch)
+add_test(NAME testRiemannFit COMMAND test_riemannfit --success)

@@ -14,6 +14,7 @@ addons:
       - gcc-6
       - g++-6
       - cmake
+      - libeigen3-dev
 
   
 
@@ -22,6 +23,7 @@ script:
   # Export CC and CXX to tell cmake which compiler to use
   - export CC=/usr/bin/gcc-6
   - export CXX=/usr/bin/g++-6
+  - export EIGEN_INCLUDE_DIR=/usr/include/eigen3
   # Run your build commands next
   - mkdir build
   - cd build
