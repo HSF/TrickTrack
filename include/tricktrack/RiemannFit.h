@@ -92,12 +92,12 @@ inline double cross2D(const Vector2d& a, const Vector2d& b) {
 }
 
 /*!
-    \brief Compute the covariance matrix (in radial coordinates )of points in
+    \brief Compute the covariance matrix (in radial coordinates) of points in
     the transverse plane due to multiple Coulomb scattering.
 
     \param p2D 2D points in the transverse plane.
     \param fast_fit fast_fit Vector4d result of the previous pre-fit
-    structured in this form:(X0, Y0, R, tan(theta))).
+    structured in this form:(X0, Y0, R, Theta)).
 
     \return scatter_cov_rad errors due to multiple scattering.
 
@@ -114,11 +114,11 @@ MatrixNd Scatter_cov_rad(const Matrix2xNd& p2D, const Vector4d& fast_fit, Vector
   u_int n = p2D.cols();
   double theta = fast_fit(3);
   double p = fast_fit(2) / cos(fast_fit(3));
-  double X = 0.04d;
+  double X = 0.04;
 
   MatrixNd scatter_cov_rad = MatrixXd::Zero(n, n);
   const float cos_f_theta = cos(theta);
-  const double sig2 = sqr(0.015 / p * sqr(X / cos_f_theta) * (1 + 0.038 * log(X / cos_f_theta)));
+  const double sig2 = sqr(0.015 / std::abs(p) * (1 + 0.038 * log(X / std::abs(cos_f_theta)))) * (X / cos_f_theta) ;
   for (u_int k = 0; k < n; ++k) {
     for (u_int l = k; l < n; ++l) {
       for (u_int i = 0; i < std::min(k, l); ++i) {
@@ -222,15 +222,13 @@ MatrixNd cov_carttorad_prefit(const Matrix2xNd& p2D, const Matrix2Nd& cov_cart,
     else {
       Vector2d a = p2D.col(i);
       Vector2d b = p2D.col(i) - fast_fit.head(2);
-      const double x1 = p2D(0, i);
-      const double y1 = p2D(1, i);
       const double x2 = a.dot(b);
       const double y2 = cross2D(a, b);
-      const double tan_c = (y1 * x2 + y2 * x1) / (x1 * x2 + y1 * y2);
+      const double tan_c = - y2/x2;
       const double tan_c2 = sqr(tan_c);
       cov_rad(i, i) =
           1. / (1. + tan_c2) *
-          (cov_cart(i, i) + cov_cart(i + n, i + n) * tan_c2 - 2 * cov_cart(i, i + n) * tan_c);
+          (cov_cart(i, i) + cov_cart(i + n, i + n) * tan_c2 + 2 * cov_cart(i, i + n) * tan_c);
     }
   }
   return cov_rad;
@@ -357,7 +355,7 @@ VectorNd X_err2(const Matrix3Nd& V, const circle_fit& circle, const MatrixNx5d& 
     \warning double precision is needed for a correct assessment of chi2.
 
     \details The minimus eigenvalue is related to chi2.
-    We exploit the fact that the matrix is ​​symmetrical and small (2x2 for line
+    We exploit the fact that the matrix is symmetrical and small (2x2 for line
     fit and 3x3 for circle fit), so the SelfAdjointEigenSolver from Eigen
     library is used, with the computedDirect  method (available only for 2x2
     and 3x3 Matrix) wich computes eigendecomposition of given matrix using a
@@ -418,7 +416,7 @@ Vector2d min_eigen2D(const Matrix2d& A, double& chi2) {
 }
 
 /*!
-    \brief A very fast helix fit: it fit a circle by three points (first, middle
+    \brief A very fast helix fit: it fits a circle by three points (first, middle
     and last point) and a line by two points (first and last).
 
     \param hits points to be fitted
@@ -436,15 +434,23 @@ Vector2d min_eigen2D(const Matrix2d& A, double& chi2) {
 
 Vector4d Fast_fit(const Matrix3xNd& hits) {
   Vector4d result;
-  u_int n = hits.cols();
+  u_int n = hits.cols(); // get the number of hits
 
   // CIRCLE FIT
+  // Make segments between middle-to-first(b) and last-to-first(c) hits
   const Vector2d b = hits.block(0, n / 2, 2, 1) - hits.block(0, 0, 2, 1);
   const Vector2d c = hits.block(0, n - 1, 2, 1) - hits.block(0, 0, 2, 1);
+  // Compute their lengths
   const double b2 = b.squaredNorm();
   const double c2 = c.squaredNorm();
   double X0;
   double Y0;
+  // The algebra has been verified (MR). The usual approach has been followed:
+  // * use an orthogonal reference frame passing from the first point.
+  // * build the segments (chords)
+  // * build orthogonal lines through mid points
+  // * make a system and solve for X0 and Y0.
+  // * add the initial point
   if (abs(b.x()) > abs(b.y())) {  //!< in case b.x is 0 (2 hits with same x)
     const double k = c.x() / b.x();
     const double div = 2. * (k * b.y() - c.y());
@@ -466,15 +472,10 @@ Vector4d Fast_fit(const Matrix3xNd& hits) {
   // LINE FIT
   const Vector2d d = hits.block(0, 0, 2, 1) - result.head(2);
   const Vector2d e = hits.block(0, n - 1, 2, 1) - result.head(2);
+  // Compute the arc-length between first and last point: L = R * theta = R *  atan (tan (Theta) )
   const double dr = result(2) * atan2(cross2D(d, e), d.dot(e));
+  // Simple difference in Z between last and first hit
   const double dz = hits(2, n - 1) - hits(2, 0);
-
-  /*
-      //faster but bad approx for small pt and eta
-      const Vector2d d = hits.block(0,1,2,1);
-      const double dr = d.norm() - a.norm();
-      const double dz = hits(2,1)-hits(2,0);
-  */
 
   result(3) = (dr / dz);
 
@@ -572,6 +573,7 @@ circle_fit Circle_fit(const Matrix2xNd& hits2D, const Matrix2Nd& hits_cov2D,
   else {
     for (u_int i = 0; i < n; ++i) A += weight(i) * (X.col(i) * X.col(i).transpose());
   }
+
 
   // minimize
   double chi2;
@@ -711,10 +713,11 @@ circle_fit Circle_fit(const Matrix2xNd& hits2D, const Matrix2Nd& hits_cov2D,
     const RowVector2Nd Jq = mc.transpose() * s * 1. / n;  // var(q)
 
     Matrix3d cov_uvr = J3 * Cvc * J3.transpose() * sqr(s_inv)  // cov(X0,Y0,R)
-                          /* + (par_uvr_ * par_uvr_.transpose()) * (Jq * V * Jq.transpose()) */ ;
+                       /*+ (par_uvr_ * par_uvr_.transpose()) * (Jq * V * Jq.transpose()) */;
 
     circle.cov = cov_uvr;
   }
+
 
   return circle;
 }
@@ -762,29 +765,37 @@ line_fit Line_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const circl
   MatrixNx5d Jx(n, 5);
 
   // x & associated Jacobian
+  // cfr https://indico.cern.ch/event/663159/contributions/2707659/attachments/1517175/2368189/Riemann_fit.pdf
+  // Slide 11
+  // a ==> -o i.e. the origin of the circle in XY plane, negative
+  // b ==> p i.e. distances of the points wrt the origin of the circle.
   const Vector2d o(circle.par(0), circle.par(1));
   for (u_int i = 0; i < n; ++i) {  // x
     Vector2d p = hits.block(0, i, 2, 1) - o;
     const double cross = cross2D(-o, p);
     const double dot = (-o).dot(p);
+    // atan2(cross, dot) give back the angle in the transverse plane so tha the final equation reads:
+    // x_i = -q*R*theta (theta = angle returned by atan2)
     const double atan2_ = -circle.q * atan2(cross, dot);
     p2D(0, i) = atan2_ * circle.par(2);
 
     // associated Jacobian, used in weights and errors computation
     const double temp0 = -circle.q * circle.par(2) * 1. / (sqr(dot) + sqr(cross));
-    double d_X0 = 0, d_Y0 = 0, d_R = 0;  // good approximation for big pt and eta
+    double d_X0 = 0, d_Y0 = 0, d_R = 0.;  // good approximation for big pt and eta
     if (error) {
-      d_X0 = -temp0 * ((p(1) + o(1)) * dot - (p(0) - o(0)) * cross);
-      d_Y0 = -temp0 * ((-p(0) - o(0)) * dot - (p(1) - o(1)) * cross);
+      d_X0 = - temp0 * ((p(1) + o(1)) * dot - (p(0) - o(0)) * cross);
+      d_Y0 = temp0 * ((p(0) + o(0)) * dot - (o(1) - p(1)) * cross);
       d_R = atan2_;
     }
     const double d_x = temp0 * (o(1) * dot + o(0) * cross);
     const double d_y = temp0 * (-o(0) * dot + o(1) * cross);
     Jx.row(i) << d_X0, d_Y0, d_R, d_x, d_y;
   }
+  // Math of d_{X0,Y0,R,x,y} all verified by hand
 
   // y
   p2D.row(1) = hits.row(2);
+
 
   // WEIGHT COMPUTATION
   VectorNd x_err2 = X_err2(hits_cov, circle, Jx, error, n);
@@ -792,15 +803,18 @@ line_fit Line_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const circl
 
   const VectorNd err2_inv = Weight_line(x_err2, y_err2, fast_fit(3));
   const VectorNd weight = err2_inv * 1. / err2_inv.sum();
-
   // COST FUNCTION
 
   // compute
+  // r0 represents the weighted mean of "x" and "y".
   const Vector2d r0 = p2D * weight;
+  // This is the X  vector that will be used to build the
+  // scatter matrix S = X^T * X
   const Matrix2xNd X = p2D.colwise() - r0;
   Matrix2d A = Matrix2d::Zero();
-  for (u_int i = 0; i < n; ++i) A += err2_inv(i) * (X.col(i) * X.col(i).transpose());
-
+  for (u_int i = 0; i < n; ++i) {
+    A += err2_inv(i) * (X.col(i) * X.col(i).transpose());
+  }
   // minimize
   double chi2;
   Vector2d v = min_eigen2D(A, chi2);
@@ -820,7 +834,17 @@ line_fit Line_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const circl
 
     Matrix3d C;  // cov(v,c)
     {
-      const double sig2 = 1. / (A(0, 0) + A(1, 1));
+      double norm_chernov = 0.;
+      for (u_int i = 0; i < n; ++i)
+        norm_chernov += err2_inv(i) * (v(0) * p2D(0, i) + v(1) * p2D(1, i) + c)
+          * (v(0) * p2D(0, i) + v(1) * p2D(1, i) + c);
+      norm_chernov /= float(n);
+      // Indeed it should read:
+      // * compute the average error in the orthogonal direction: err2_inv.cwiseInverse().sum()/sqr(n)
+      // * normalize the A(0,0)+A(1,1) dividing by err2_inv.sum(), since those have been weighted
+      const double norm = (err2_inv.cwiseInverse().sum())*err2_inv.sum()*1./sqr(n);
+      const double sig2 = 1./(A(0,0) + A(1,1))*norm;
+//      const double sig2 = 1. / (A(0, 0) + A(1, 1));
       C(0, 0) = sig2 * v1_2;
       C(1, 1) = sig2 * v0_2;
       C(0, 1) = C(1, 0) = -sig2 * v(0) * v(1);
@@ -890,6 +914,7 @@ helix_fit Helix_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const dou
   u_int n = hits.cols();
   VectorNd rad = (hits.block(0, 0, 2, n).colwise().norm());
 
+  // Fast_fit gives back (X0, Y0, R, theta) w/o errors, using only 3 points.
   const Vector4d fast_fit = Fast_fit(hits);
 
   circle_fit circle = Circle_fit(hits.block(0, 0, 2, n), hits_cov.block(0, 0, 2 * n, 2 * n),
@@ -912,6 +937,10 @@ helix_fit Helix_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const dou
 
   return helix;
 }
+
+
+
+
 
 }
 #endif /* TRICKTRACK_RIEMANNFIT_H */
