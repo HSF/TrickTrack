@@ -110,7 +110,7 @@ inline double cross2D(const Vector2d& a, const Vector2d& b) {
 
  */
 // X in input TO FIX
-MatrixNd Scatter_cov_rad(const Matrix2xNd& p2D, const Vector4d& fast_fit, VectorNd const & rad) {
+inline MatrixNd Scatter_cov_rad(const Matrix2xNd& p2D, const Vector4d& fast_fit, VectorNd const & rad) {
   u_int n = p2D.cols();
   double theta = fast_fit(3);
   double p = fast_fit(2) / cos(fast_fit(3));
@@ -175,7 +175,7 @@ inline Matrix2Nd cov_radtocart(const Matrix2xNd& p2D,
 
     \warning correlation between different point are not computed.
 */
-MatrixNd cov_carttorad(const Matrix2xNd& p2D,
+inline MatrixNd cov_carttorad(const Matrix2xNd& p2D,
                        const Matrix2Nd& cov_cart,
                        const VectorNd& rad) {
   u_int n = p2D.cols();
@@ -210,7 +210,7 @@ MatrixNd cov_carttorad(const Matrix2xNd& p2D,
 
 */
 
-MatrixNd cov_carttorad_prefit(const Matrix2xNd& p2D, const Matrix2Nd& cov_cart,
+inline MatrixNd cov_carttorad_prefit(const Matrix2xNd& p2D, const Matrix2Nd& cov_cart,
                               const Vector4d& fast_fit,
                               const VectorNd& rad) {
   u_int n = p2D.cols();
@@ -249,7 +249,7 @@ MatrixNd cov_carttorad_prefit(const Matrix2xNd& p2D, const Matrix2Nd& cov_cart,
     diagonal cov matrix. Further investigation needed.
 */
 
-inline VectorNd Weight_circle(const Matrix2xNd& p2D, const MatrixNd& cov_rad_inv) {
+inline VectorNd Weight_circle(const Matrix2xNd& /*p2D*/, const MatrixNd& cov_rad_inv) {
   return cov_rad_inv.colwise().sum().transpose();
 }
 
@@ -298,7 +298,7 @@ inline int Charge(const Matrix2xNd& p2D, const Vector3d& par_uvr) {
     \param error flag for errors computation.
 */
 
-void par_uvrtopak(circle_fit& circle, const double& B, const bool& error) {
+inline void par_uvrtopak(circle_fit& circle, const double& B, const bool& error) {
   Vector3d par_pak;
   const double temp0 = circle.par.head(2).squaredNorm();
   const double temp1 = sqrt(temp0);
@@ -330,7 +330,7 @@ void par_uvrtopak(circle_fit& circle, const double& B, const bool& error) {
     \return x_err2 squared errors in the x axis.
 */
 
-VectorNd X_err2(const Matrix3Nd& V, const circle_fit& circle, const MatrixNx5d& J,
+inline VectorNd X_err2(const Matrix3Nd& V, const circle_fit& circle, const MatrixNx5d& J,
                 const bool& error, u_int n) {
   VectorNd x_err2(n);
   for (u_int i = 0; i < n; ++i) {
@@ -364,7 +364,7 @@ VectorNd X_err2(const Matrix3Nd& V, const circle_fit& circle, const MatrixNx5d& 
 
 */
 
-Vector3d min_eigen3D(const Matrix3d& A, double& chi2) {
+inline Vector3d min_eigen3D(const Matrix3d& A, double& chi2) {
   SelfAdjointEigenSolver<Matrix3d> solver(3);
   solver.computeDirect(A);
   int min_index;
@@ -386,7 +386,7 @@ Vector3d min_eigen3D(const Matrix3d& A, double& chi2) {
     speed up in  single precision.
 */
 
-Vector3d min_eigen3D_fast(const Matrix3d& A) {
+inline Vector3d min_eigen3D_fast(const Matrix3d& A) {
   SelfAdjointEigenSolver<Matrix3f> solver(3);
   solver.computeDirect(A.cast<float>());
   int min_index;
@@ -407,7 +407,7 @@ Vector3d min_eigen3D_fast(const Matrix3d& A) {
     significantly in single precision.
 */
 
-Vector2d min_eigen2D(const Matrix2d& A, double& chi2) {
+inline Vector2d min_eigen2D(const Matrix2d& A, double& chi2) {
   SelfAdjointEigenSolver<Matrix2d> solver(2);
   solver.computeDirect(A);
   int min_index;
@@ -432,7 +432,7 @@ Vector2d min_eigen2D(const Matrix2d& A, double& chi2) {
     - computation of error due to multiple scattering.
 */
 
-Vector4d Fast_fit(const Matrix3xNd& hits) {
+inline Vector4d Fast_fit(const Matrix3xNd& hits) {
   Vector4d result;
   u_int n = hits.cols(); // get the number of hits
 
@@ -513,7 +513,7 @@ Vector4d Fast_fit(const Matrix3xNd& hits) {
     scattering.
 */
 
-circle_fit Circle_fit(const Matrix2xNd& hits2D, const Matrix2Nd& hits_cov2D,
+inline circle_fit Circle_fit(const Matrix2xNd& hits2D, const Matrix2Nd& hits_cov2D,
                       const Vector4d& fast_fit, VectorNd const & rad,
                       const bool& error = true,
                       const bool& scattering = false) {
@@ -710,7 +710,8 @@ circle_fit Circle_fit(const Matrix2xNd& hits2D, const Matrix2Nd& hits_cov2D,
           0, 0, -h * sqr(v2x2_inv) * 2. - (2. * c + v(2)) * v2x2_inv * t, -t;
     }
 
-    const RowVector2Nd Jq = mc.transpose() * s * 1. / n;  // var(q)
+    /// @todo (vvolkl): investigate calculation of errors here and resulting compilation error
+    //const RowVector2Nd Jq = mc.transpose() * s * 1. / n;  // var(q)
 
     Matrix3d cov_uvr = J3 * Cvc * J3.transpose() * sqr(s_inv)  // cov(X0,Y0,R)
                        /*+ (par_uvr_ * par_uvr_.transpose()) * (Jq * V * Jq.transpose()) */;
@@ -757,7 +758,7 @@ circle_fit Circle_fit(const Matrix2xNd& hits2D, const Matrix2Nd& hits_cov2D,
     errors.
 */
 
-line_fit Line_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const circle_fit& circle,
+inline line_fit Line_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const circle_fit& circle,
                   const Vector4d& fast_fit, const bool& error = true) {
   u_int n = hits.cols();
   // PROJECTION ON THE CILINDER
@@ -909,7 +910,7 @@ line_fit Line_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const circl
    \bug see Circle_fit(), Line_fit() and Fast_fit() bugs.
 */
 
-helix_fit Helix_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const double& B,
+inline helix_fit Helix_fit(const Matrix3xNd& hits, const Matrix3Nd& hits_cov, const double& B,
                     const bool& error = true, const bool& scattering = false) {
   u_int n = hits.cols();
   VectorNd rad = (hits.block(0, 0, 2, n).colwise().norm());
