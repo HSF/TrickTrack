@@ -114,7 +114,7 @@ MatrixNd Scatter_cov_rad(const Matrix2xNd& p2D, const Vector4d& fast_fit, Vector
   u_int n = p2D.cols();
   double theta = fast_fit(3);
   double p = fast_fit(2) / cos(fast_fit(3));
-  double X = 0.04d;
+  double X = 0.04f;
 
   MatrixNd scatter_cov_rad = MatrixXd::Zero(n, n);
   const float cos_f_theta = cos(theta);
