@@ -7,6 +7,7 @@
 
     mkdir build
     cd build
+    export EIGEN_INCLUDE_DIR=<eigen installation dir>
     cmake -DCMAKE_INSTALL_PREFIX=<installdir> [-Dtricktrack_documentation=ON] <path to sources>
     make -j<number of cores on your machine>
     make install
@@ -42,7 +43,7 @@ To run the tests of the project, first build it and then invoke
 
 ## Inclusion into other projects
 
-TrckTrack is distributed under the Apache License 2.0 (see `LICENSE`). If you want to build your own project against tricktrack, CMake may be the best option for you. Just add its location to _CMAKE_PREFIX_PATH_ and call _find_package(tricktrack)_ within your CMakeLists.txt.
+TrckTrack is distributed under the Apache License 2.0 (see `LICENSE`). If you want to build your own project against tricktrack, CMake may be the best option for you. Just add its install location (the folder containing `cmake/tricktrackConfig.cmake` to _CMAKE_PREFIX_PATH_ and call _find_package(tricktrack)_ within your CMakeLists.txt.
 
 A `pkg-config` `.pc` file is also installed if you do not use CMake.
 Simply add the location of the `.pc` file (nominally `<installdir>/lib/pkgconfig`) and run `pkg-config --cflags --libs tricktrack` to get the
