@@ -4,6 +4,7 @@
 #include <chrono>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 
 
 #include "tricktrack/RiemannFit.h"
