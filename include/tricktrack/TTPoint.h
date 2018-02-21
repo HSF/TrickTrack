@@ -14,7 +14,7 @@ public:
   TTPoint(double r, double phi, double z, double t, unsigned int id) : m_coordinates{r, phi, z, t}, m_identifier(id) {}
 
   double x() const { return m_coordinates[0] * std::cos(m_coordinates[1]); }
-  double y() const { return m_coordinates[1] * std::sin(m_coordinates[1]); }
+  double y() const { return m_coordinates[0] * std::sin(m_coordinates[1]); }
   double z() const { return m_coordinates[2]; }
   double t() const { return m_coordinates[3]; }
   double rho() const { return m_coordinates[0];}
