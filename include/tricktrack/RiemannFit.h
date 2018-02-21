@@ -711,10 +711,13 @@ inline circle_fit Circle_fit(const Matrix2xNd& hits2D, const Matrix2Nd& hits_cov
     }
 
     /// @todo (vvolkl): investigate calculation of errors here and resulting compilation error
-    //const RowVector2Nd Jq = mc.transpose() * s * 1. / n;  // var(q)
+    const RowVector2Nd Jq = mc.transpose() * s * 1. / n;  // var(q)
+    double JqProd = Jq * V * Jq.transpose();
 
+
+    
     Matrix3d cov_uvr = J3 * Cvc * J3.transpose() * sqr(s_inv)  // cov(X0,Y0,R)
-                       /*+ (par_uvr_ * par_uvr_.transpose()) * (Jq * V * Jq.transpose()) */;
+                       + (par_uvr_ * par_uvr_.transpose()) * JqProd;
 
     circle.cov = cov_uvr;
   }
