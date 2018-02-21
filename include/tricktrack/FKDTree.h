@@ -2,6 +2,7 @@
 #define TRICKTRACK_FKDTREE_H
 
 #include "FKDPoint.h"
+#include "TTPoint.h"
 #include "FQueue.h"
 #include <algorithm>
 #include <array>
@@ -54,8 +55,8 @@ public:
   /// Indices are pushed into foundPoints, which is not checked for emptiness at the beginning,
   /// nor memory is reserved for it.
   /// Searching is done using a Breadth-first search, level after level.
-  void search(const FKDPoint<TYPE, numberOfDimensions>& minPoint,
-              const FKDPoint<TYPE, numberOfDimensions>& maxPoint,
+  void search(const TTPoint& minPoint,
+              const TTPoint& maxPoint,
               std::vector<unsigned int>& foundPoints) {
     // going down the FKDTree, one needs track which indices have to be visited in the following level.
     // a custom queue is created, since std::queue is based on lists which are sometimes not performing
@@ -114,7 +115,7 @@ public:
 
   /// A vector of K-dimensional points needs to be passed in order to build the kdtree.
   /// The order of the elements in the vector will be modified.
-  void build(std::vector<FKDPoint<TYPE, numberOfDimensions>>& points) {
+  void build(std::vector<TTPoint>& points) {
     // initialization of the data members
     theNumberOfPoints = points.size();
     theDepth = ilog2(theNumberOfPoints);
@@ -150,8 +151,8 @@ public:
         std::nth_element(points.begin() + theIntervalMin[indexInArray],
                          points.begin() + theIntervalMin[indexInArray] + whichElementInInterval,
                          points.begin() + theIntervalMin[indexInArray] + theIntervalLength[indexInArray],
-                         [dimension](const FKDPoint<TYPE, numberOfDimensions>& a,
-                                     const FKDPoint<TYPE, numberOfDimensions>& b) -> bool {
+                         [dimension](const TTPoint& a,
+                                     const TTPoint& b) -> bool {
                            if (a[dimension] == b[dimension])
                              return a.getId() < b.getId();
                            else
@@ -208,15 +209,15 @@ private:
   unsigned int rightSonIndex(unsigned int index) const { return 2 * index + 2; }
 
   /// check if one element's dimension is between minPoint's and maxPoint's dimension
-  bool intersects(unsigned int index, const FKDPoint<TYPE, numberOfDimensions>& minPoint,
-                  const FKDPoint<TYPE, numberOfDimensions>& maxPoint, int dimension) const {
+  bool intersects(unsigned int index, const TTPoint& minPoint,
+                  const TTPoint& maxPoint, int dimension) const {
     return (theDimensions[dimension][index] <= maxPoint[dimension] &&
             theDimensions[dimension][index] >= minPoint[dimension]);
   }
 
   /// check if an element is completely in the box
-  bool is_in_the_box(unsigned int index, const FKDPoint<TYPE, numberOfDimensions>& minPoint,
-                     const FKDPoint<TYPE, numberOfDimensions>& maxPoint) const {
+  bool is_in_the_box(unsigned int index, const TTPoint& minPoint,
+                     const TTPoint& maxPoint) const {
     for (unsigned int i = 0; i < numberOfDimensions; ++i) {
       if ((theDimensions[i][index] <= maxPoint[i] && theDimensions[i][index] >= minPoint[i]) == false) return false;
     }
@@ -224,13 +225,13 @@ private:
   }
 
   /// places an element at the specified position in the internal data structure
-  void add_at_position(const FKDPoint<TYPE, numberOfDimensions>& point, const unsigned int position) {
+  void add_at_position(const TTPoint& point, const unsigned int position) {
     for (unsigned int i = 0; i < numberOfDimensions; ++i)
       theDimensions[i][position] = point[i];
     theIds[position] = point.getId();
   }
 
-  void add_at_position(FKDPoint<TYPE, numberOfDimensions>&& point, const unsigned int position) {
+  void add_at_position(TTPoint&& point, const unsigned int position) {
     for (unsigned int i = 0; i < numberOfDimensions; ++i)
       theDimensions[i][position] = point[i];
     theIds[position] = point.getId();
