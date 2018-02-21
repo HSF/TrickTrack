@@ -11,14 +11,14 @@ namespace tricktrack {
 
 class TTPoint {
 public:
-  TTPoint(double x, double y, double z, double t, unsigned int id) : m_coordinates{x, y, z, t}, m_identifier(id) {}
+  TTPoint(double r, double phi, double z, double t, unsigned int id) : m_coordinates{r, phi, z, t}, m_identifier(id) {}
 
-  double x() const { return m_coordinates[0]; }
-  double y() const { return m_coordinates[1]; }
+  double x() const { return m_coordinates[0] * std::cos(m_coordinates[1]); }
+  double y() const { return m_coordinates[1] * std::sin(m_coordinates[1]); }
   double z() const { return m_coordinates[2]; }
   double t() const { return m_coordinates[3]; }
-  double rho() const { return std::sqrt(std::pow(m_coordinates[0], 2) + std::pow(m_coordinates[1], 2)); }
-  double phi() const { return std::atan2(m_coordinates[1], m_coordinates[0]); }
+  double rho() const { return m_coordinates[0];}
+  double phi() const { return m_coordinates[1];}
   const unsigned int identifier() const { return m_identifier; }
 
   double& operator[](unsigned int const i) { return m_coordinates[i]; }
