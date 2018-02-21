@@ -21,7 +21,7 @@ TEST_CASE("RiemannFit method - Perfect Helix", "[integration]") {
     riemannHits.col(3) <<  0.001, -1, 3;
 
     Matrix3Nd hits_cov = Matrix3Nd::Identity(3*nhits,3*nhits);
-    auto h = Helix_fit(riemannHits, hits_cov, 1, false, false);
+    auto h = Helix_fit(riemannHits, hits_cov, 1, true, false);
     std::cout << "parameters " <<  h.par << std::endl;
     std::cout << "charge " << h.q << std::endl;
     std::cout << "chi_2 circle " << h.chi2_circle << std::endl;
@@ -42,7 +42,7 @@ TEST_CASE("RiemannFit method - Perfect Helix", "[integration]") {
     riemannHits.col(3) <<  0, -1, 3;
 
     Matrix3Nd hits_cov = Matrix3Nd::Identity(3*nhits,3*nhits);
-    auto h = Helix_fit(riemannHits, hits_cov, 1, false, false);
+    auto h = Helix_fit(riemannHits, hits_cov, 1, true, false);
     std::cout << "parameters " <<  h.par << std::endl;
     std::cout << "charge " << h.q << std::endl;
     std::cout << "chi_2 circle " << h.chi2_circle << std::endl;
