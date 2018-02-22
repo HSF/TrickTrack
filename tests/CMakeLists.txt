@@ -56,3 +56,7 @@ add_executable(test_riemannfit test_riemannfit.cpp)
 include_directories( $ENV{EIGEN_INCLUDE_DIR})
 target_link_libraries(test_riemannfit  catch)
 add_test(NAME testRiemannFit COMMAND test_riemannfit --success)
+
+add_executable(test_ttpoint test_ttpoint.cpp)
+target_link_libraries(test_ttpoint  catch)
+add_test(NAME testTTPoint COMMAND test_ttpoint --success)
