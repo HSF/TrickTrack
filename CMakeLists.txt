@@ -46,6 +46,10 @@ include(CTest)
 #--- enable CPack --------------------------------------------------------------
 include(cmake/tricktrackCPack.cmake)
 
+#--- search for Eigen package --------------------------------------------------
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 #--- target for Doxygen documentation ------------------------------------------
 if(tricktrack_documentation)
   include(cmake/tricktrackDoxygen.cmake)
