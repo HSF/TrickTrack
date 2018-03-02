@@ -53,7 +53,6 @@ target_link_libraries(test_fkdtree  catch)
 add_test(NAME testFKDTree COMMAND test_fkdtree --success)
 
 add_executable(test_riemannfit test_riemannfit.cpp)
-include_directories( $ENV{EIGEN_INCLUDE_DIR})
 target_link_libraries(test_riemannfit  catch)
 add_test(NAME testRiemannFit COMMAND test_riemannfit --success)
 
