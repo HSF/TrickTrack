@@ -90,7 +90,7 @@ public:
         if (intersection) {
           // Check if the element is contained in the box and push it to the result
           if (is_in_the_box(index, minPoint, maxPoint)) {
-            foundPoints.emplace_back(theIds[index]);
+            foundPoints.emplace_back(index);
           }
           // if the element is between the box borders, both the its sons have to be visited
           numberOfSonsToVisitNext =
