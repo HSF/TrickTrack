@@ -661,11 +661,11 @@ inline circle_fit Circle_fit(const Matrix2xNd& hits2D, const Matrix2Nd& hits_cov
         VectorNd t0(n);
         VectorNd t1(n);
         if (l == k) {
-          t0 = 2. * D_[j][l] * s_v.col(l);
+          t0 =  (D_[j][l] * s_v.col(l)) * 2.;
           if (i == j)
             t1 = t0;
           else
-            t1 = 2. * D_[i][l] * s_v.col(l);
+            t1 = (D_[i][l] * s_v.col(l)) * 2.;
         } else {
           t0 = D_[j][l] * s_v.col(k) + D_[j][k] * s_v.col(l);
           if (i == j)
