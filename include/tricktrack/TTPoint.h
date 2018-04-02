@@ -5,6 +5,7 @@
 #include <cmath>
 #include <ostream>
 #include <vector>
+#include <array>
 
 namespace tricktrack {
 
