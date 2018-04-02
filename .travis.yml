@@ -15,6 +15,7 @@ addons:
       - g++-6
       - cmake
       - libeigen3-dev
+      - libspdlog-dev
 
   
 
