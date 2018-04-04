@@ -5,13 +5,22 @@
 
 #include <cmath>
 #include <vector>
+#include <functional>
 // Header for interface we want to test
 #include "tricktrack/HitChainMaker.h"
 #include "tricktrack/HitDoublets.h"
 #include "tricktrack/SpacePoint.h"
+#include "tricktrack/TripletFilter.h"
 
 using Hit = tricktrack::SpacePoint<size_t>;
 using namespace tricktrack;
+using namespace std::placeholders;
+
+template <typename Hit>
+  bool customizedGeometricFilter(const CMCell<Hit>& theInnerCell, const CMCell<Hit>& theOuterCell) {
+  return defaultGeometricFilter(theInnerCell,theOuterCell, 0.8, 0., 0., 0.002, 0.2, 0.8, 0.2 );
+
+    }
 
 void findTripletsForTest(const TrackingRegion& region,
                          std::vector<Hit>
@@ -62,8 +71,10 @@ void findTripletsForTest(const TrackingRegion& region,
   g.theLayerPairs.push_back(lp2);
   g.theRootLayers.push_back(0);
 
+  
   auto automaton = new HitChainMaker<Hit>(g);
-  automaton->createAndConnectCells(doublets, region, 1, 1000, 1000);
+
+  automaton->createAndConnectCells(doublets, customizedGeometricFilter);
   automaton->evolve(3);
   automaton->findNtuplets(foundTracklets, 3);
 }

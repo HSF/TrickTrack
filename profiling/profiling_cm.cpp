@@ -14,9 +14,16 @@
 #include "tricktrack/HitChainMaker.h"
 #include "tricktrack/HitDoublets.h"
 #include "tricktrack/SpacePoint.h"
+#include "tricktrack/TripletFilter.h"
 
 using Hit = tricktrack::SpacePoint<size_t>;
 using namespace tricktrack;
+
+template <typename Hit>
+  bool customizedGeometricFilter(const CMCell<Hit>& theInnerCell, const CMCell<Hit>& theOuterCell) {
+  return defaultGeometricFilter(theInnerCell,theOuterCell, 0.8, 0., 0., 0.002, 0.2, 0.8, 0.2 );
+
+    }
 
 void findTripletsForTest(const TrackingRegion& region,
                          std::vector<Hit>
@@ -73,7 +80,7 @@ void findTripletsForTest(const TrackingRegion& region,
 		std::clock_t startcputime = std::clock();
     for (int j = 0; j < rep; ++j) {
 
-  automaton->createAndConnectCells(doublets, region, 1, 1000, 1000);
+  automaton->createAndConnectCells(doublets, customizedGeometricFilter);
   automaton->evolve(3);
   automaton->findNtuplets(foundTracklets, 3);
 		double cpu_duration = (std::clock() - startcputime) / rep / (double)CLOCKS_PER_SEC;
