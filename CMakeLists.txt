@@ -46,6 +46,13 @@ include(CTest)
 #--- enable CPack --------------------------------------------------------------
 include(cmake/tricktrackCPack.cmake)
 
+#--- add path to Find modules -------------------------------------------------
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+
+#--- search for Eigen package --------------------------------------------------
+find_package(Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 #--- target for Doxygen documentation ------------------------------------------
 if(tricktrack_documentation)
   include(cmake/tricktrackDoxygen.cmake)
@@ -68,6 +75,7 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
 add_subdirectory(tests)
 add_subdirectory(src)
 add_subdirectory(profiling)
+add_subdirectory(python)
 
 #--- create uninstall target ---------------------------------------------------
 include(cmake/tricktrackUninstall.cmake)
