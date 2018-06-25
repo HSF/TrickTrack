@@ -17,17 +17,16 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 add_library(catch INTERFACE)
 target_include_directories(catch INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/catch)
 
-#find_package(Eigen3)
 
 
 # - Create and define test executables
 # Here a generic example for creating an executable then defining it as a
 # test to CTest
 # 1. Create executable
-add_executable(test_hit_class test_hit_class.cpp)
+#add_executable(test_hit_class test_hit_class.cpp)
 
 # 2. Link it to the library being tested, plus the unit test library(ies)
-target_link_libraries(test_hit_class  catch)
+#target_link_libraries(test_hit_class  catch)
 
 # 3. Add the test program as a command to be run as a test
 # Note: NAME is what will be shown in CTest, COMMAND is what will be run
@@ -37,25 +36,24 @@ target_link_libraries(test_hit_class  catch)
 # Note: The executable can be passed command line arguments. Here we add
 #       `--success` which is provided by Catch's main() function and reports
 #       info about successful as well as failing tests.
-add_test(NAME testHitClass COMMAND test_hit_class --success)
 
+# generate several tests of the form
+#add_executable(test_ttpoint test_ttpoint.cpp)
+#target_link_libraries(test_ttpoint  catch)
+#add_test(NAME testTTPoint COMMAND test_ttpoint --success)
+set (TT_TESTS
+      test_hit_class
+      test_integration
+      test_cmgraph_class
+      test_fkdtree
+      test_riemannfit
+      test_ttpoint)
 
-add_executable(test_integration test_integration.cpp)
-target_link_libraries(test_integration  catch)
-add_test(NAME testIntegration COMMAND test_integration --success)
-
-add_executable(test_cmgraph_class test_cmgraph_class.cpp)
-target_link_libraries(test_cmgraph_class  catch)
-add_test(NAME testCMGraph COMMAND test_cmgraph_class --success)
-
-add_executable(test_fkdtree test_fkdtree.cpp)
-target_link_libraries(test_fkdtree  catch)
-add_test(NAME testFKDTree COMMAND test_fkdtree --success)
-
-add_executable(test_riemannfit test_riemannfit.cpp)
-target_link_libraries(test_riemannfit  catch)
-add_test(NAME testRiemannFit COMMAND test_riemannfit --success)
-
-add_executable(test_ttpoint test_ttpoint.cpp)
-target_link_libraries(test_ttpoint  catch)
-add_test(NAME testTTPoint COMMAND test_ttpoint --success)
+foreach (test ${TT_TESTS})
+  add_executable(${test} ${test}.cpp)
+  if(tricktrack_logger)
+    target_link_libraries(${test} Threads::Threads)
+  endif()
+  target_link_libraries(${test} catch)
+  add_test(NAME ${test} COMMAND ${test} --success)
+endforeach()

@@ -2,6 +2,7 @@
 #include "catch.hpp"
 
 #include "tricktrack/RiemannFit.h"
+#include "tricktrack/Logger.h"
 
 using namespace tricktrack;
 
@@ -22,11 +23,12 @@ TEST_CASE("RiemannFit method - Perfect Helix", "[integration]") {
 
     Matrix3Nd hits_cov = Matrix3Nd::Identity(3*nhits,3*nhits);
     auto h = Helix_fit(riemannHits, hits_cov, 1, true, false);
-    std::cout << "parameters " <<  h.par << std::endl;
-    std::cout << "charge " << h.q << std::endl;
-    std::cout << "chi_2 circle " << h.chi2_circle << std::endl;
-    std::cout << "chi_2 line " << h.chi2_line << std::endl;
-    std::cout << "par " << h.par << std::endl; 
+    TT_INFO("parameters: ",  h.par);
+
+   /* TT_INFO("charge " << h.q );
+    TT_INFO("chi_2 circle " << h.chi2_circle );
+    TT_INFO("chi_2 line " << h.chi2_line );
+    TT_INFO("par " << h.par ); */
 
     REQUIRE(h.par(1) == Approx(1));
     

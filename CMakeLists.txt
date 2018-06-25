@@ -40,6 +40,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #--- Declare options -----------------------------------------------------------
 option(tricktrack_documentation "Whether or not to create doxygen doc target.")
 
+option(tricktrack_logger "Whether or not to use spdlog for logging")
+option(tricktrack_logger_standalone "Whether or not to use standalone logger")
+if (tricktrack_logger_standalone)
+  add_definitions(-DUSE_SPDLOG_STANDALONE)
+endif()
+
 #--- enable unit testing capabilities ------------------------------------------
 include(CTest)
 
@@ -53,6 +59,19 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+<<<<<<< HEAD
+=======
+if (tricktrack_logger)
+  find_package(spdlog REQUIRED)
+  include_directories(${SPDLOG_INCLUDE_DIR})
+
+  find_package(Threads REQUIRED)
+
+  add_definitions(-DUSE_SPDLOG)
+endif()
+
+
+>>>>>>> master
 #--- target for Doxygen documentation ------------------------------------------
 if(tricktrack_documentation)
   include(cmake/tricktrackDoxygen.cmake)
