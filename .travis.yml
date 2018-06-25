@@ -25,6 +25,9 @@ script:
   - export CXX=/usr/bin/g++-6
   - export EIGEN_INCLUDE_DIR=/usr/include/eigen3
   # Run your build commands next
+  - git submodule init
+  - git submodule update
+  - git apply --stat python2.7.patch
   - mkdir build
   - cd build
   - cmake .. && make
