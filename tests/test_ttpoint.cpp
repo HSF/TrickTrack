@@ -15,7 +15,7 @@ using namespace tricktrack;
 TEST_CASE("FKDTree with TTPoint", "[integration]") {
 
   TTPoint p(0, 1, 2, 3,4);
-  std::cout << p[0] << std::endl;
+  p.print();
   try {
     FKDTree<double, 4> tree;
     float minX = 0.2;

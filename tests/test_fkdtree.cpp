@@ -11,6 +11,8 @@
 using namespace tricktrack;
 
 TEST_CASE("FKDTree 2D", "[integration]") {
+  TTPoint a(0, 1, 2, 3, 4);
+  a.print();
   /*
   try {
     FKDTree<float, 2> tree;
