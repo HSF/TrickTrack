@@ -59,8 +59,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
-<<<<<<< HEAD
-=======
 if (tricktrack_logger)
   find_package(spdlog REQUIRED)
   include_directories(${SPDLOG_INCLUDE_DIR})
@@ -71,7 +69,6 @@ if (tricktrack_logger)
 endif()
 
 
->>>>>>> master
 #--- target for Doxygen documentation ------------------------------------------
 if(tricktrack_documentation)
   include(cmake/tricktrackDoxygen.cmake)
