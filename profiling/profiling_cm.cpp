@@ -1,11 +1,15 @@
 
-// Catch setup with supplied main()
-#define CATCH_CONFIG_MAIN
-#include "catch.hpp"
 
 #include <cmath>
+#include <random>
 #include <vector>
-#include <functional>
+#include <cstdio>
+#include <iostream>
+#include <ctime>
+#include <chrono>
+#include <vector>
+#include <algorithm>
+#include <numeric>
 // Header for interface we want to test
 #include "tricktrack/HitChainMaker.h"
 #include "tricktrack/HitDoublets.h"
@@ -14,7 +18,6 @@
 
 using Hit = tricktrack::SpacePoint<size_t>;
 using namespace tricktrack;
-using namespace std::placeholders;
 
 template <typename Hit>
   bool customizedGeometricFilter(const CMCell<Hit>& theInnerCell, const CMCell<Hit>& theOuterCell) {
@@ -71,60 +74,48 @@ void findTripletsForTest(const TrackingRegion& region,
   g.theLayerPairs.push_back(lp2);
   g.theRootLayers.push_back(0);
 
-  
   auto automaton = new HitChainMaker<Hit>(g);
+
+    constexpr double rep = 1;
+		std::clock_t startcputime = std::clock();
+    for (int j = 0; j < rep; ++j) {
 
   automaton->createAndConnectCells(doublets, customizedGeometricFilter);
   automaton->evolve(3);
   automaton->findNtuplets(foundTracklets, 3);
+		double cpu_duration = (std::clock() - startcputime) / rep / (double)CLOCKS_PER_SEC;
+    std::cout << foundTracklets.size() << "\t" << cpu_duration << "\t" << barrel0.size() << std::endl; 
+     }
 }
 
-TEST_CASE("Integration test without track filtering", "[integration]") {
 
-  const TrackingRegion myRegion(10, 0, 0, 1000);
+int main() {
+    std::default_random_engine generator;
+    std::uniform_real_distribution<float> distribution(0,M_PI);
+    double r = 0;
+    float phi = 0; 
 
-  SECTION("One hit per layer") {
+    for (int numTracks = 1; numTracks < 60; numTracks ++) {
+
     std::vector<Hit> inner_hits;
-    inner_hits.push_back(Hit(0, 1, 0, 0));
     std::vector<Hit> middle_hits;
-    middle_hits.push_back(Hit(0, 2, 0, 0));
     std::vector<Hit> outer_hits;
-    outer_hits.push_back(Hit(0, 3, 0, 0));
+    phi = distribution(generator);  
+    for (int _n = 0; _n < numTracks; ++_n) {
+    r = 1;
+    inner_hits.push_back(Hit(r * std::cos(phi), r*std::sin(phi), 0, 0));
+    r = 2;
+    middle_hits.push_back(Hit(r * std::cos(phi), r*std::sin(phi), 0, 0));
+    r = 3;
+    outer_hits.push_back(Hit(r * std::cos(phi), r*std::sin(phi), 0, 0));
+    }
+    const TrackingRegion myRegion(10, 0, 0, 1000);
 
     std::vector<CMCell<Hit>::CMntuplet> foundTracklets;
+    foundTracklets.reserve(5e7);
     findTripletsForTest(myRegion, inner_hits, middle_hits, outer_hits, foundTracklets);
-    REQUIRE(foundTracklets.size() == 1);
-  }
+    }
 
-  SECTION("Two hits per layer, orthogonal tracks") {
-    std::vector<Hit> inner_hits;
-    inner_hits.push_back(Hit(0, 1, 0, 0));
-    inner_hits.push_back(Hit(1, 0, 0, 1));
-    std::vector<Hit> middle_hits;
-    middle_hits.push_back(Hit(0, 2, 0, 0));
-    middle_hits.push_back(Hit(2, 0, 0, 1));
-    std::vector<Hit> outer_hits;
-    outer_hits.push_back(Hit(0, 3, 0, 0));
-    outer_hits.push_back(Hit(3, 0, 0, 1));
 
-    std::vector<CMCell<Hit>::CMntuplet> foundTracklets;
-    findTripletsForTest(myRegion, inner_hits, middle_hits, outer_hits, foundTracklets);
-    REQUIRE(foundTracklets.size() == 2);
-  }
-
-  SECTION("Two hits per layer, very close tracks") {
-    std::vector<Hit> inner_hits;
-    inner_hits.push_back(Hit(0, 1, 0, 0));
-    inner_hits.push_back(Hit(0, 1.001, 0, 1));
-    std::vector<Hit> middle_hits;
-    middle_hits.push_back(Hit(0, 2, 0, 0));
-    middle_hits.push_back(Hit(0, 2.002, 0, 1));
-    std::vector<Hit> outer_hits;
-    outer_hits.push_back(Hit(0, 3, 0, 0));
-    outer_hits.push_back(Hit(0, 3.003, 0, 1));
-
-    std::vector<CMCell<Hit>::CMntuplet> foundTracklets;
-    findTripletsForTest(myRegion, inner_hits, middle_hits, outer_hits, foundTracklets);
-    REQUIRE(foundTracklets.size() == 8);
-  }
+  return 0;
 }
