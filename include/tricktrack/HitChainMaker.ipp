@@ -6,8 +6,7 @@
 namespace tricktrack {
 
 template <typename Hit>
-void HitChainMaker<Hit>::createAndConnectCells(std::vector<HitDoublets<Hit>*>& hitDoublets, const TrackingRegion& region,
-                                              const float thetaCut, const float phiCut, const float hardPtCut) {
+void HitChainMaker<Hit>::createAndConnectCells(std::vector<HitDoublets<Hit>*>& hitDoublets, TripletFilter<Hit> theFilter) {
   // resize cell container
   int tsize = 0;
   for (auto hd : hitDoublets)
@@ -16,13 +15,9 @@ void HitChainMaker<Hit>::createAndConnectCells(std::vector<HitDoublets<Hit>*>& h
 
   // get parameters for alignment
   unsigned int cellId = 0;
-  float ptmin = region.ptMin();
-  float region_origin_x = region.originX();
-  float region_origin_y = region.originY();
-  float region_origin_radius = region.originRBound();
 
   // walk the graph to connect cells
-  std::vector<bool> alreadyVisitedLayerPairs;  // @todo: size known, could be an array?
+  std::vector<bool> alreadyVisitedLayerPairs;
   alreadyVisitedLayerPairs.resize(theLayerGraph.theLayerPairs.size());
   for (auto visited : alreadyVisitedLayerPairs) {
     visited = false;
@@ -66,8 +61,7 @@ void HitChainMaker<Hit>::createAndConnectCells(std::vector<HitDoublets<Hit>*>& h
           cellId++;
 
           auto& neigCells = currentInnerLayerRef.isOuterHitOfCell[doubletLayerPairId->innerHitId(i)];
-          allCells.back().checkAlignmentAndTag(allCells, neigCells, ptmin, region_origin_x, region_origin_y,
-                                               region_origin_radius, thetaCut, phiCut, hardPtCut);
+          allCells.back().checkAlignmentAndTag(allCells, neigCells, theFilter);
         }
         assert(cellId == currentLayerPairRef.theFoundCells[1]);
         for (auto outerLayerPair : currentOuterLayerRef.theOuterLayerPairs) {
@@ -137,18 +131,13 @@ void HitChainMaker<Hit>::findNtuplets(std::vector<typename CMCell<Hit>::CMntuple
 
 template <typename Hit>
 void HitChainMaker<Hit>::findTriplets(std::vector<HitDoublets<Hit>*>& hitDoublets,
-                                     std::vector<typename CMCell<Hit>::CMntuplet>& foundTriplets, const TrackingRegion& region,
-                                     const float thetaCut, const float phiCut, const float hardPtCut) {
+                                     std::vector<typename CMCell<Hit>::CMntuplet>& foundTriplets, TripletFilter<Hit> theFilter) {
   int tsize = 0;
   for (auto hd : hitDoublets)
     tsize += hd->size();
   allCells.reserve(tsize);
 
   unsigned int cellId = 0;
-  float ptmin = region.ptMin();
-  float region_origin_x = region.originX();
-  float region_origin_y = region.originY();
-  float region_origin_radius = region.originRBound();
 
   std::vector<bool> alreadyVisitedLayerPairs;
   alreadyVisitedLayerPairs.resize(theLayerGraph.theLayerPairs.size());
@@ -190,9 +179,7 @@ void HitChainMaker<Hit>::findTriplets(std::vector<HitDoublets<Hit>*>& hitDoublet
           cellId++;
 
           auto& neigCells = currentInnerLayerRef.isOuterHitOfCell[doubletLayerPairId->innerHitId(i)];
-          allCells.back().checkAlignmentAndPushTriplet(allCells, neigCells, foundTriplets, ptmin, region_origin_x,
-                                                       region_origin_y, region_origin_radius, thetaCut, phiCut,
-                                                       hardPtCut);
+          allCells.back().checkAlignmentAndPushTriplet(allCells, neigCells, foundTriplets, theFilter);
         }
         assert(cellId == currentLayerPairRef.theFoundCells[1]);
 

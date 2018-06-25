@@ -2,10 +2,12 @@
 #define TRICKTRACK_HITCHAINMAKER_H
 
 #include <array>
+#include <functional>
 #include <memory>
 #include "tricktrack/CMCell.h"
 #include "tricktrack/CMGraph.h"
 #include "tricktrack/TrackingRegion.h"
+#include "tricktrack/TripletFilter.h"
 
 // forward declarations
 namespace tricktrack {
@@ -32,14 +34,12 @@ public:
   
   std::vector<CMCell<Hit>> & getAllCells() { return allCells;}
   
-  void createAndConnectCells(std::vector<HitDoublets<Hit> *>&,
-			     const TrackingRegion& region, const float, const float, const float);
+  void createAndConnectCells(std::vector<HitDoublets<Hit> *>&, TripletFilter<Hit> theFilter);
   
   void evolve(const unsigned int);
   void findNtuplets(std::vector<typename CMCell<Hit>::CMntuplet>&, const unsigned int);
   
-  void findTriplets(std::vector<HitDoublets<Hit>*>& hitDoublets,std::vector<typename CMCell<Hit>::CMntuplet>& foundTriplets, const TrackingRegion& region, 
-		    const float thetaCut, const float phiCut, const float hardPtCut);
+  void findTriplets(std::vector<HitDoublets<Hit>*>& hitDoublets,std::vector<typename CMCell<Hit>::CMntuplet>& foundTriplets, TripletFilter<Hit> theFilter);
   
 private:
   CMGraph & theLayerGraph;
