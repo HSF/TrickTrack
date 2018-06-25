@@ -1,5 +1,5 @@
 # TrickTrack 
-[![Build Status](https://travis-ci.org/HEP-SF/TrickTrack.svg?branch=master)](https://travis-ci.org/HEP-SF/TrickTrack)
+[![Build Status](https://travis-ci.org/HSF/TrickTrack.svg?branch=master)](https://travis-ci.org/HSF/TrickTrack)
 
 **TrickTrack** aims to encapsulate the Cellular-Automaton based seeding code used in CMSSW in a standalone library. The original sources in CMSSW are listed in `doc/CMSSW_sources.md`. 
 
