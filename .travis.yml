@@ -25,6 +25,8 @@ script:
   - export CXX=/usr/bin/g++-6
   - export EIGEN_INCLUDE_DIR=/usr/include/eigen3
   # Run your build commands next
+  - git submodule add https://github.com/pybind/pybind11 python/pybind11
+  - patch -p1 < python2.7.patch 
   - mkdir build
   - cd build
   - cmake .. && make

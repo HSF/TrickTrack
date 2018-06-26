@@ -36,8 +36,11 @@ target_include_directories(catch INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/catch)
 # Note: The executable can be passed command line arguments. Here we add
 #       `--success` which is provided by Catch's main() function and reports
 #       info about successful as well as failing tests.
-#add_test(NAME testHitClass COMMAND test_hit_class --success)
 
+# generate several tests of the form
+#add_executable(test_ttpoint test_ttpoint.cpp)
+#target_link_libraries(test_ttpoint  catch)
+#add_test(NAME testTTPoint COMMAND test_ttpoint --success)
 set (TT_TESTS
       test_hit_class
       test_integration
