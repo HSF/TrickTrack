@@ -18,6 +18,10 @@ installation of [Doxygen](http://www.doxygen.org/index.html). If CMake cannot lo
 Doxygen, its install location should be added into `CMAKE_PREFIX_PATH`.
 For further details please have a look at [the CMake tutorial](http://www.cmake.org/cmake-tutorial/).
 
+TrickTrack supports the `spdlog` library for logging. Use `tricktrack_logger` cmake option to enable spd logging, and the `tricktrack_logger_standalone` option if there is no framework that creates the logging object.
+
+A high level interface with optional python bindings can be created with the option `tricktrack_python`.
+
 ## Building the documentation
 
 The documentation of the project is based on doxygen. To build the documentation,

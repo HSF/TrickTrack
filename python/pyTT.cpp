@@ -7,7 +7,6 @@
 // Header for interface we want to test
 #include "tricktrack/HitChainMaker.h"
 #include "tricktrack/HitDoublets.h"
-//#include "tricktrack/SpacePoint.h"
 
 struct Vector3D {
 
@@ -109,7 +108,6 @@ std::vector<std::vector<unsigned int>> TTReco(std::array<std::vector<std::array<
        	double phi0 = p0.phi();
         double phi1 = p1.phi();
         double dPhi = M_PI - std::fabs(std::fabs(phi1 - phi0) - M_PI);
-	     //std::cout<<"phi0: "<<phi0<<", phi1: "<<phi1<<", dPhi: "<<dPhi<<std::endl;
         if(dPhi < phiCut_d)
         	doublets[0]->add(p0.identifier(), p1.identifier());
       }
@@ -119,17 +117,16 @@ std::vector<std::vector<unsigned int>> TTReco(std::array<std::vector<std::array<
        	double phi1 = p1.phi();
         double phi2 = p2.phi();
         double dPhi = M_PI - std::fabs(std::fabs(phi2 - phi1) - M_PI);
-        //	std::cout<<"phi1: "<<phi1<<", phi2: "<<phi2<<", dPhi: "<<dPhi<<std::endl;
         if(dPhi < phiCut_d)
                 doublets[1]->add(p1.identifier(), p2.identifier());
       }
     }
  
-    std::cout<<"d1: "<<doublets[0]->size()<<", d2: "<<doublets[1]->size()<<std::endl;
 
-    auto l1 = CMLayer("innerLayer", 100000);
-    auto l2 = CMLayer("middleLayer", 100000);
-    auto l3 = CMLayer("outerLayer", 100000);
+    constexpr unsigned int numHits = 100000;
+    auto l1 = CMLayer("innerLayer", numHits);
+    auto l2 = CMLayer("middleLayer",  numHits);
+    auto l3 = CMLayer("outerLayer", numHits);
 
     auto lp1 = CMLayerPair(0, 1);
     auto lp2 = CMLayerPair(1, 2);

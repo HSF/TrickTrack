@@ -40,8 +40,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #--- Declare options -----------------------------------------------------------
 option(tricktrack_documentation "Whether or not to create doxygen doc target.")
 
-option(tricktrack_logger "Whether or not to use spdlog for logging")
-option(tricktrack_logger_standalone "Whether or not to use standalone logger")
+option(tricktrack_python "Whether or not to create python bindings for tricktrack" OFF)
+
+option(tricktrack_logger "Whether or not to use spdlog for logging" OFF)
+option(tricktrack_logger_standalone "Whether or not to use standalone logger" OFF)
 if (tricktrack_logger_standalone)
   add_definitions(-DUSE_SPDLOG_STANDALONE)
 endif()
@@ -60,8 +62,10 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 if (tricktrack_logger)
-  find_package(spdlog REQUIRED)
-  include_directories(${SPDLOG_INCLUDE_DIR})
+  find_package(spdlog)
+  if (NOT spdlog_FOUND) 
+    include_directories(include/spdlog)
+  endif()
 
   find_package(Threads REQUIRED)
 
@@ -91,7 +95,9 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
 add_subdirectory(tests)
 add_subdirectory(src)
 add_subdirectory(profiling)
-add_subdirectory(python)
+if (tricktrack_python) 
+  add_subdirectory(python)
+endif()
 
 #--- create uninstall target ---------------------------------------------------
 include(cmake/tricktrackUninstall.cmake)
