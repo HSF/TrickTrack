@@ -62,8 +62,10 @@ find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
 if (tricktrack_logger)
-  #find_package(spdlog REQUIRED)
-  include_directories(include/spdlog)
+  find_package(spdlog)
+  if (NOT spdlog_FOUND) 
+    include_directories(include/spdlog)
+  endif()
 
   find_package(Threads REQUIRED)
 
