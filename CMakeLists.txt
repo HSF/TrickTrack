@@ -40,10 +40,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 #--- Declare options -----------------------------------------------------------
 option(tricktrack_documentation "Whether or not to create doxygen doc target.")
 
-option(tricktrack_python "Whether or not to create python bindings for tricktrack")
+option(tricktrack_python "Whether or not to create python bindings for tricktrack" OFF)
 
-option(tricktrack_logger "Whether or not to use spdlog for logging")
-option(tricktrack_logger_standalone "Whether or not to use standalone logger")
+option(tricktrack_logger "Whether or not to use spdlog for logging" OFF)
+option(tricktrack_logger_standalone "Whether or not to use standalone logger" OFF)
 if (tricktrack_logger_standalone)
   add_definitions(-DUSE_SPDLOG_STANDALONE)
 endif()
