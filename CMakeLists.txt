@@ -65,6 +65,8 @@ if (tricktrack_logger)
   find_package(spdlog)
   if (NOT spdlog_FOUND) 
     include_directories(include/spdlog)
+  else()
+    include_directories(${SPDLOG_INCLUDE_DIR})
   endif()
 
   find_package(Threads REQUIRED)
