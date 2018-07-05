@@ -17,7 +17,7 @@ TEST_CASE("FKDTree with TTPoint", "[integration]") {
   TTPoint p(0, 1, 2, 3,4);
   p.print();
   try {
-    FKDTree<double, 4> tree;
+    FKDTree<TTPoint, double, 4> tree;
     float minX = 0.2;
     float minY = 0.1;
     float minZ = 0.1;
