@@ -1,8 +1,6 @@
 #ifndef TRICKTRACK_FKDTREE_H
 #define TRICKTRACK_FKDTREE_H
 
-#include "FKDPoint.h"
-#include "TTPoint.h"
 #include "FQueue.h"
 #include <algorithm>
 #include <array>
@@ -32,13 +30,20 @@ unsigned int ilog2(unsigned int v) {
  *  @author Felice Pantaleo
  *  @email felice.pantaleo@cern.ch
  *  @date: 08/05/2017
+ *  @tparam Hit
+ *    Hit class representing the nodes of the k-d tree. The coordinate along the i-th dimension
+ *    must be accessible as `hit[i]`
+ *  @tparam TYPE
+ *    numerical type of the node coordinates
+ *  @tparam numberOfDimensions
+ *    Set to 2 for 2D Spacepoints, ...
  *
  *  This class provides a k-d tree implementation targeting modern architectures.
  * Building each level of the FKDTree can be done in parallel by different threads.
  * It produces a compact array of nodes in memory thanks to the different space partitioning method used.
  */
 
-template <class TYPE, unsigned int numberOfDimensions>
+template <typename Hit, class TYPE, unsigned int numberOfDimensions>
 class FKDTree {
 
 public:
@@ -55,8 +60,8 @@ public:
   /// Indices are pushed into foundPoints, which is not checked for emptiness at the beginning,
   /// nor memory is reserved for it.
   /// Searching is done using a Breadth-first search, level after level.
-  void search(const TTPoint& minPoint,
-              const TTPoint& maxPoint,
+  void search(const Hit& minPoint,
+              const Hit& maxPoint,
               std::vector<unsigned int>& foundPoints) {
     // going down the FKDTree, one needs track which indices have to be visited in the following level.
     // a custom queue is created, since std::queue is based on lists which are sometimes not performing
@@ -115,7 +120,7 @@ public:
 
   /// A vector of K-dimensional points needs to be passed in order to build the kdtree.
   /// The order of the elements in the vector will be modified.
-  void build(std::vector<TTPoint>& points) {
+  void build(std::vector<Hit>& points) {
     // initialization of the data members
     theNumberOfPoints = points.size();
     theDepth = ilog2(theNumberOfPoints);
@@ -151,8 +156,8 @@ public:
         std::nth_element(points.begin() + theIntervalMin[indexInArray],
                          points.begin() + theIntervalMin[indexInArray] + whichElementInInterval,
                          points.begin() + theIntervalMin[indexInArray] + theIntervalLength[indexInArray],
-                         [dimension](const TTPoint& a,
-                                     const TTPoint& b) -> bool {
+                         [dimension](const Hit& a,
+                                     const Hit& b) -> bool {
                            if (a[dimension] == b[dimension])
                              return a.getId() < b.getId();
                            else
@@ -209,15 +214,15 @@ private:
   unsigned int rightSonIndex(unsigned int index) const { return 2 * index + 2; }
 
   /// check if one element's dimension is between minPoint's and maxPoint's dimension
-  bool intersects(unsigned int index, const TTPoint& minPoint,
-                  const TTPoint& maxPoint, int dimension) const {
+  bool intersects(unsigned int index, const Hit& minPoint,
+                  const Hit& maxPoint, int dimension) const {
     return (theDimensions[dimension][index] <= maxPoint[dimension] &&
             theDimensions[dimension][index] >= minPoint[dimension]);
   }
 
   /// check if an element is completely in the box
-  bool is_in_the_box(unsigned int index, const TTPoint& minPoint,
-                     const TTPoint& maxPoint) const {
+  bool is_in_the_box(unsigned int index, const Hit& minPoint,
+                     const Hit& maxPoint) const {
     for (unsigned int i = 0; i < numberOfDimensions; ++i) {
       if ((theDimensions[i][index] <= maxPoint[i] && theDimensions[i][index] >= minPoint[i]) == false) return false;
     }
@@ -225,13 +230,13 @@ private:
   }
 
   /// places an element at the specified position in the internal data structure
-  void add_at_position(const TTPoint& point, const unsigned int position) {
+  void add_at_position(const Hit& point, const unsigned int position) {
     for (unsigned int i = 0; i < numberOfDimensions; ++i)
       theDimensions[i][position] = point[i];
     theIds[position] = point.getId();
   }
 
-  void add_at_position(TTPoint&& point, const unsigned int position) {
+  void add_at_position(Hit&& point, const unsigned int position) {
     for (unsigned int i = 0; i < numberOfDimensions; ++i)
       theDimensions[i][position] = point[i];
     theIds[position] = point.getId();

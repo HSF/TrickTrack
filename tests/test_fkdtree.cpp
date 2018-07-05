@@ -7,15 +7,14 @@
 #include <vector>
 
 #include "tricktrack/FKDTree.h"
+#include "tricktrack/TTPoint.h"
+#include "tricktrack/FKDPoint.h"
 
 using namespace tricktrack;
 
 TEST_CASE("FKDTree 2D", "[integration]") {
-  TTPoint a(0, 1, 2, 3, 4);
-  a.print();
-  /*
   try {
-    FKDTree<float, 2> tree;
+    FKDTree<FKDPoint<float, 2>, float, 2> tree;
     float minX = 0.2;
     float minY = 0.1;
     float maxX = 0.7;
@@ -56,13 +55,11 @@ TEST_CASE("FKDTree 2D", "[integration]") {
     std::cerr << e.what() << std::endl;
     REQUIRE(false);
   }
-  */
 }
 
 TEST_CASE("FKDTree 3D", "[integration]") {
-  /*
   try {
-    FKDTree<float, 3> tree;
+    FKDTree<FKDPoint<float, 3>,float, 3> tree;
     float minX = 0.2;
     float minY = 0.1;
     float minZ = 0.1;
@@ -108,5 +105,4 @@ TEST_CASE("FKDTree 3D", "[integration]") {
     std::cerr << e.what() << std::endl;
     REQUIRE(false);
   }
-  */
 }
