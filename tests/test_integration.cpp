@@ -6,7 +6,7 @@
 #include <cmath>
 #include <vector>
 #include <functional>
-// Header for interface we want to test
+
 #include "tricktrack/HitChainMaker.h"
 #include "tricktrack/HitDoublets.h"
 #include "tricktrack/SpacePoint.h"
@@ -16,14 +16,9 @@ using Hit = tricktrack::SpacePoint<size_t>;
 using namespace tricktrack;
 using namespace std::placeholders;
 
-template <typename Hit>
-  bool customizedGeometricFilter(const CMCell<Hit>& theInnerCell, const CMCell<Hit>& theOuterCell) {
-  return defaultGeometricFilter(theInnerCell,theOuterCell, 0.8, 0., 0., 0.002, 0.2, 0.8, 0.2 );
 
-    }
 
-void findTripletsForTest(const TrackingRegion& region,
-                         std::vector<Hit>
+void findTripletsForTest( std::vector<Hit>
                              barrel0,
                          std::vector<Hit>
                              barrel1,
@@ -74,7 +69,16 @@ void findTripletsForTest(const TrackingRegion& region,
   
   auto automaton = new HitChainMaker<Hit>(g);
 
-  TripletFilter<Hit> ff = std::bind(defaultGeometricFilter<Hit>, _1, _2,  0.8, 0., 0., 0.002, 0.2, 0.8, 0.2 );
+  // create 
+  TripletFilter<Hit> ff = std::bind(defaultGeometricFilter<Hit>, _1, _2,  
+                                    0.8, // ptmin 
+                                    0.,  // region_origin_x
+                                    0.,  // region_origin_y
+                                    0.002, // region_origin_radius
+                                    0.2, // phiCut
+                                    0.8, // hardPtCut
+                                    0.2  // thetaCut
+                                    );
   automaton->createAndConnectCells(doublets, ff);
   automaton->evolve(3);
   automaton->findNtuplets(foundTracklets, 3);
@@ -82,7 +86,6 @@ void findTripletsForTest(const TrackingRegion& region,
 
 TEST_CASE("Integration test without track filtering", "[integration]") {
 
-  const TrackingRegion myRegion(10, 0, 0, 1000);
 
   SECTION("One hit per layer") {
     std::vector<Hit> inner_hits;
@@ -93,7 +96,7 @@ TEST_CASE("Integration test without track filtering", "[integration]") {
     outer_hits.push_back(Hit(0, 3, 0, 0));
 
     std::vector<CMCell<Hit>::CMntuplet> foundTracklets;
-    findTripletsForTest(myRegion, inner_hits, middle_hits, outer_hits, foundTracklets);
+    findTripletsForTest(inner_hits, middle_hits, outer_hits, foundTracklets);
     REQUIRE(foundTracklets.size() == 1);
   }
 
@@ -109,7 +112,7 @@ TEST_CASE("Integration test without track filtering", "[integration]") {
     outer_hits.push_back(Hit(3, 0, 0, 1));
 
     std::vector<CMCell<Hit>::CMntuplet> foundTracklets;
-    findTripletsForTest(myRegion, inner_hits, middle_hits, outer_hits, foundTracklets);
+    findTripletsForTest(inner_hits, middle_hits, outer_hits, foundTracklets);
     REQUIRE(foundTracklets.size() == 2);
   }
 
@@ -125,7 +128,7 @@ TEST_CASE("Integration test without track filtering", "[integration]") {
     outer_hits.push_back(Hit(0, 3.003, 0, 1));
 
     std::vector<CMCell<Hit>::CMntuplet> foundTracklets;
-    findTripletsForTest(myRegion, inner_hits, middle_hits, outer_hits, foundTracklets);
+    findTripletsForTest(inner_hits, middle_hits, outer_hits, foundTracklets);
     REQUIRE(foundTracklets.size() == 8);
   }
 }
