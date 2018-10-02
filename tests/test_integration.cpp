@@ -11,6 +11,7 @@
 #include "tricktrack/HitDoublets.h"
 #include "tricktrack/SpacePoint.h"
 #include "tricktrack/TripletFilter.h"
+#include "tricktrack/CMGraphUtils.h"
 
 using Hit = tricktrack::SpacePoint<size_t>;
 using namespace tricktrack;
@@ -42,29 +43,9 @@ void findTripletsForTest( std::vector<Hit>
       doublets[1]->add(p1.identifier(), p2.identifier());
     }
   }
+  
+  CMGraph g = createGraph({{"innerlayer", "middleLayer", "outerLayer"}});
 
-  auto l1 = CMLayer("innerLayer", 10);
-  auto l2 = CMLayer("middleLayer", 10);
-  auto l3 = CMLayer("outerLayer", 10);
-
-  auto lp1 = CMLayerPair(0, 1);
-  auto lp2 = CMLayerPair(1, 2);
-  l1.theOuterLayers.push_back(1);
-  l2.theInnerLayers.push_back(0);
-  l2.theOuterLayers.push_back(2);
-  l3.theInnerLayers.push_back(1);
-  l1.theOuterLayerPairs.push_back(0);
-  l2.theInnerLayerPairs.push_back(0);
-  l2.theOuterLayerPairs.push_back(1);
-  l3.theInnerLayerPairs.push_back(1);
-
-  auto g = CMGraph();
-  g.theLayers.push_back(l1);
-  g.theLayers.push_back(l2);
-  g.theLayers.push_back(l3);
-  g.theLayerPairs.push_back(lp1);
-  g.theLayerPairs.push_back(lp2);
-  g.theRootLayers.push_back(0);
 
   
   auto automaton = new HitChainMaker<Hit>(g);
