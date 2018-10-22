@@ -19,6 +19,7 @@ target_include_directories(catch INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/catch)
 
 
 
+
 # - Create and define test executables
 # Here a generic example for creating an executable then defining it as a
 # test to CTest
@@ -43,7 +44,6 @@ target_include_directories(catch INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/catch)
 #add_test(NAME testTTPoint COMMAND test_ttpoint --success)
 set (TT_TESTS
       test_hit_class
-      test_integration
       test_cmgraph_class
       test_fkdtree
       test_riemannfit
