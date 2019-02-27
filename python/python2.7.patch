@@ -1,7 +1,7 @@
-diff --git a/python/pytbind11/tools/FindPythonLibsNew.cmake b/tools/FindPythonLibsNew.cmake
+diff --git a/pybind11/tools/FindPythonLibsNew.cmake b/pybind11/tools/FindPythonLibsNew.cmake
 index b29b287..c967066 100644
---- a/python/pybind11/tools/FindPythonLibsNew.cmake
-+++ b/python/pybind11/tools/FindPythonLibsNew.cmake
+--- a/pybind11/tools/FindPythonLibsNew.cmake
++++ b/pybind11/tools/FindPythonLibsNew.cmake
 @@ -57,9 +57,9 @@ endif()
  
  # Use the Python interpreter to find the libs.
