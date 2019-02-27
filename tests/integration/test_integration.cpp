@@ -78,7 +78,9 @@ int main() {
     findTripletsForTest(inner_hits, middle_hits, outer_hits, foundTracklets);
     // fail on unexpected output
     if (foundTracklets.size() != 8) {
+      std::cerr << "TrickTrack integration test failed!" << std::endl;
       return 1;
     }
+    std::cout << "TrickTrack integration test successful" << std::endl;
     return 0;
 }

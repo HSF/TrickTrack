@@ -11,6 +11,8 @@ set(tricktrack_VERSION "@PROJECT_VERSION@")
 # the imported targets created later.
 set_and_check(tricktrack_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
 
+set_and_check(tricktrack_LIBRARIES "@PACKAGE_CMAKE_INSTALL_LIBDIR@/libtricktrack.so")
+
 
 # - Include the targets file to create the imported targets that a client can
 # link to (libraries) or execute (programs)
