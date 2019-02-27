@@ -2,6 +2,7 @@
 #include "catch.hpp"
 
 #include "tricktrack/CMGraph.h"
+#include "tricktrack/CMGraphUtils.h"
 
 using namespace tricktrack;
 

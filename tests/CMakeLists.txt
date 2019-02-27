@@ -1,5 +1,5 @@
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
+
 
 
 
@@ -16,6 +16,7 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 # and copy the `catch.hpp` file into the catch subdirectory
 add_library(catch INTERFACE)
 target_include_directories(catch INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/catch)
+
 
 
 
@@ -43,7 +44,6 @@ target_include_directories(catch INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/catch)
 #add_test(NAME testTTPoint COMMAND test_ttpoint --success)
 set (TT_TESTS
       test_hit_class
-      test_integration
       test_cmgraph_class
       test_fkdtree
       test_riemannfit
@@ -52,8 +52,8 @@ set (TT_TESTS
 foreach (test ${TT_TESTS})
   add_executable(${test} ${test}.cpp)
   if(tricktrack_logger)
-    target_link_libraries(${test} Threads::Threads)
+    target_link_libraries(${test}  Threads::Threads)
   endif()
-  target_link_libraries(${test} catch)
+  target_link_libraries(${test} catch tricktrack)
   add_test(NAME ${test} COMMAND ${test} --success)
 endforeach()

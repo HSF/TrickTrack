@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.2)
 # - Call project() to setup system
 # From CMake 3, we can set the project version easily in one go
-project(tricktrack VERSION 0.1.0)
+project(tricktrack VERSION 1.0.7)
 
 #--- Define basic build settings -----------------------------------------------
 # - Use GNU-style hierarchy for installing build products
@@ -25,28 +25,15 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
   endif()
 endif()
 
-# - Define the C++ Standard to use (Simplest Possible)
-# This will add any compiler flags needed to compile against the required standard
-# without any vendor extensions
-# NOTE: It *does not* guarantee that the compiler in use supports the complete
-# standard. Nor does it inform clients of the project what standard was used.
-# Both of these issues can be resolved using CMake's compile features, see
-#
-# - https://cmake.org/cmake/help/v3.3/manual/cmake-compile-features.7.html
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+#--- Define the C++ Standard to use -------------------------------------------
+set(CMAKE_CXX_STANDARD 14 CACHE STRING "")
 
 #--- Declare options -----------------------------------------------------------
-option(tricktrack_documentation "Whether or not to create doxygen doc target.")
+option(tricktrack_documentation "Create doxygen doc target." OFF)
+option(tricktrack_python "Create python bindings for tricktrack" OFF)
+option(tricktrack_logger "Use spdlog for logging" OFF)
+option(tricktrack_logger_standalone "Use spdlog standalone (as opposed to in a framework" OFF)
 
-option(tricktrack_python "Whether or not to create python bindings for tricktrack" OFF)
-
-option(tricktrack_logger "Whether or not to use spdlog for logging" OFF)
-option(tricktrack_logger_standalone "Whether or not to use standalone logger" OFF)
-if (tricktrack_logger_standalone)
-  add_definitions(-DUSE_SPDLOG_STANDALONE)
-endif()
 
 #--- enable unit testing capabilities ------------------------------------------
 include(CTest)
@@ -61,17 +48,16 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 find_package(Eigen3 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+#--- logger setup --------------------------------------------------------------
 if (tricktrack_logger)
-  find_package(spdlog)
-  if (NOT spdlog_FOUND) 
-    include_directories(include/spdlog)
-  else()
-    include_directories(${SPDLOG_INCLUDE_DIR})
-  endif()
-
+  find_package(spdlog REQUIRED)
+  include_directories(${SPDLOG_INCLUDE_DIR})
   find_package(Threads REQUIRED)
-
   add_definitions(-DUSE_SPDLOG)
+endif()
+
+if (tricktrack_logger_standalone)
+  add_definitions(-DUSE_SPDLOG_STANDALONE)
 endif()
 
 
@@ -94,8 +80,9 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
               ${CMAKE_CURRENT_SOURCE_DIR}/NOTICE
               DESTINATION ${CMAKE_INSTALL_DOCDIR})
 
-add_subdirectory(tests)
+#--- add actual code -----------------------------------------------------------
 add_subdirectory(src)
+add_subdirectory(tests)
 add_subdirectory(profiling)
 if (tricktrack_python) 
   add_subdirectory(python)

@@ -1,12 +1,16 @@
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
 
-#file(GLOB sources *.cpp)
-file(GLOB headers  ${CMAKE_SOURCE_DIR}/include/tricktrack/*.h)
 
-add_library(tricktrack INTERFACE)
-#target_link_libraries(...)
-#install(TARGETS tricktrack DESTINATION lib)
+file(GLOB sources tricktrack/*.cpp)
+file(GLOB headers  ${CMAKE_SOURCE_DIR}/include/tricktrack/*.h ${CMAKE_SOURCE_DIR}/include/tricktrack/*.ipp)
 
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/tricktrack DESTINATION include)
+add_library(tricktrack SHARED ${sources})
+target_include_directories(tricktrack PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
+set_target_properties(tricktrack PROPERTIES PUBLIC_HEADER "${headers}")
+INSTALL(TARGETS tricktrack
+        LIBRARY DESTINATION lib
+        PUBLIC_HEADER DESTINATION include/tricktrack
+)
+
 
