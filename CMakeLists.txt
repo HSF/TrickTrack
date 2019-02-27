@@ -81,8 +81,8 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
               DESTINATION ${CMAKE_INSTALL_DOCDIR})
 
 #--- add actual code -----------------------------------------------------------
-add_subdirectory(tests)
 add_subdirectory(src)
+add_subdirectory(tests)
 add_subdirectory(profiling)
 if (tricktrack_python) 
   add_subdirectory(python)

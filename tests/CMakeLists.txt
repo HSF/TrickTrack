@@ -1,5 +1,5 @@
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
+
 
 
 
@@ -52,8 +52,8 @@ set (TT_TESTS
 foreach (test ${TT_TESTS})
   add_executable(${test} ${test}.cpp)
   if(tricktrack_logger)
-    target_link_libraries(${test} Threads::Threads)
+    target_link_libraries(${test}  Threads::Threads)
   endif()
-  target_link_libraries(${test} catch)
+  target_link_libraries(${test} catch tricktrack)
   add_test(NAME ${test} COMMAND ${test} --success)
 endforeach()
