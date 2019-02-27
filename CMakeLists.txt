@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.2)
 # - Call project() to setup system
 # From CMake 3, we can set the project version easily in one go
-project(tricktrack VERSION 0.1.0)
+project(tricktrack VERSION 1.0.7)
 
 #--- Define basic build settings -----------------------------------------------
 # - Use GNU-style hierarchy for installing build products
