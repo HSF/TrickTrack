@@ -102,6 +102,10 @@ int main() {
     std::vector<Hit> inner_hits;
     std::vector<Hit> middle_hits;
     std::vector<Hit> outer_hits;
+    inner_hits.reserve(numTracks);
+    outer_hits.reserve(numTracks);
+    middle_hits.reserve(numTracks);
+
     phi = distribution(generator);  
     for (int _n = 0; _n < numTracks; ++_n) {
     r = 1;
