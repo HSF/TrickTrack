@@ -11,7 +11,7 @@ namespace tricktrack {
 using namespace Eigen;
 
 constexpr double d = 1.e-4;         //!< used in numerical derivative (J2 in Circle_fit())
-constexpr unsigned int max_nop = 8;  //!< In order to avoid use of dynamic memory
+constexpr unsigned int max_nop = 28;  //!< In order to avoid use of dynamic memory
 
 using MatrixNd = Eigen::Matrix<double, Dynamic, Dynamic, 0, max_nop, max_nop>;
 using ArrayNd = Eigen::Array<double, Dynamic, Dynamic, 0, max_nop, max_nop>;
