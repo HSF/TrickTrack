@@ -1,5 +1,10 @@
-set(CPACK_PACKAGE_DESCRIPTION "tricktrack Project")
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "tricktrack Project")
+
+
+set(CPACK_PACKAGE_NAME "hep-tricktrack")
+set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/HSF/TrickTrack")
+set(CPACK_PACKAGE_DESCRIPTION "HEP track seeding library for pattern recognition with Cellular Automata.")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "HEP track seeding library for pattern recognition with Cellular Automata.")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "valentin.volkl@cern.ch")
 set(CPACK_PACKAGE_VENDOR "HEP Software Foundation")
 set(CPACK_PACKAGE_VERSION ${tricktrack_VERSION})
 set(CPACK_PACKAGE_VERSION_MAJOR ${tricktrack_MAJOR_VERSION})
