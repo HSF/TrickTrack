@@ -9,7 +9,7 @@ target_include_directories(tricktrack PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 set_target_properties(tricktrack PROPERTIES PUBLIC_HEADER "${headers}")
 INSTALL(TARGETS tricktrack
-        LIBRARY DESTINATION lib
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         PUBLIC_HEADER DESTINATION include/tricktrack
 )
 
